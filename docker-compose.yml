@@ -1,0 +1,86 @@
+version: "4"
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-mysql}
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fin-app
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-container
+    ports:
+      - "15672:15672" # Interface web de gerenciamento
+      - "5672:5672" # Porta padrão do protocolo AMQP
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS:-guest}
+    networks:
+      - fin-app # Conectar na rede 'sail'
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379" # Porta para comunicação com Redis
+    networks:
+      - fin-app # Conectar na rede 'sail'
+  mongodb:
+    image: mongo:7.0.5
+    container_name: mongodb
+    ports:
+      - "27017:27017" # Porta para comunicação com o MongoDB
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root} # Usuário raiz do MongoDB
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password} # Senha do MongoDB
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-product-service} # Nome do banco de dados inicial
+    volumes:
+      - ./data/mongodb:/data/db # Persistência de dados
+    networks:
+      - fin-app # Conectar na rede 'sail'
+  auth-service:
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "9501:9501"
+    volumes:
+      - ./src:/app # mount only the `src` folder to avoid permission issues
+    env_file:
+      - ./AuthService/.env
+    command: [ "sh", "-c", "sleep 10 && php server.php" ]  # Delay startup by 10 seconds
+    depends_on:
+      - rabbitmq
+    networks:
+      - fin-app
+  account-service:
+    build:
+      context: ./AccountService
+      dockerfile: Dockerfile
+    container_name: account-service
+    ports:
+      - "9502:9502"
+    volumes:
+      - ./src:/app # mount only the `src` folder
+    env_file:
+      - ./AccountService/.env
+    command: [ "sh", "-c", "sleep 10 && php server.php" ]  # Delay startup by 10 seconds
+    depends_on:
+      - rabbitmq
+    networks:
+      - fin-app
+networks:
+  fin-app:
+    driver: bridge # Rede isolada entre os contêineres
+volumes:
+  sail-mysql:
+    driver: local # Volume para o MySQL
+  sail-redis:
+    driver: local # Volume para o Redis
