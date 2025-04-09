@@ -55,7 +55,7 @@ services:
       - ./src:/app # mount only the `src` folder to avoid permission issues
     env_file:
       - ./AuthService/.env
-    command: [ "sh", "-c", "sleep 10 && php server.php" ]  # Delay startup by 10 seconds
+    command: ["sh", "-c", "sleep 10 && php server.php"] # Delay startup by 10 seconds
     depends_on:
       - rabbitmq
     networks:
@@ -71,7 +71,7 @@ services:
       - ./src:/app # mount only the `src` folder
     env_file:
       - ./AccountService/.env
-    command: [ "sh", "-c", "sleep 10 && php server.php" ]  # Delay startup by 10 seconds
+    command: ["sh", "-c", "sleep 10 &&  php server.php"] # Delay startup by 10 seconds
     depends_on:
       - rabbitmq
     networks:

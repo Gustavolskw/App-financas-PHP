@@ -5,7 +5,7 @@
   "autoload": {
     "psr-4": {
       "Auth\\": "src/",
-      "Database\\Migrations\\": "migrations/",
+      "Auth\\Migrations\\": "migrations/",
       "Auth\\Translations\\": "src/Translations/"
     }
   },
@@ -24,7 +24,9 @@
     "dompdf/dompdf": "^3.1",
     "vlucas/phpdotenv": "^5.6",
     "firebase/php-jwt": "^6.0",
-    "predis/predis": "^2.0"
+    "predis/predis": "^2.0",
+    "doctrine/migrations": "^3.9",
+    "symfony/yaml": "^7.2"
   },
   "minimum-stability": "stable",
   "scripts": {

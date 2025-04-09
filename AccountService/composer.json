@@ -1,12 +1,12 @@
 {
-  "name": "auth/service",
-  "description": "Microservice to authenticate users and registrate them on the database",
+  "name": "account/service",
+  "description": "Microservice to Manage the Users accounts",
   "type": "project",
   "autoload": {
     "psr-4": {
       "Acc\\": "src/",
-      "Database\\Migrations\\": "migrations/",
-      "Auth\\Translations\\": "src/Translations/"
+      "Acc\\Migrations\\": "migrations/",
+      "Acc\\Translations\\": "src/Translations/"
     }
   },
   "authors": [
@@ -24,7 +24,9 @@
     "dompdf/dompdf": "^3.1",
     "vlucas/phpdotenv": "^5.6",
     "firebase/php-jwt": "^6.0",
-    "guzzlehttp/guzzle": "^7.4"
+    "guzzlehttp/guzzle": "^7.4",
+    "doctrine/migrations": "^3.9",
+    "symfony/yaml": "^7.2"
   },
   "minimum-stability": "stable",
   "scripts": {
