@@ -2,31 +2,37 @@
 namespace Auth\Config;
 
 use Dotenv\Dotenv;
-use Illuminate\Database\Capsule\Manager as Capsule;
+use PDO;
+use PDOException;
 
 class Database
 {
-    public static function bootEloquent(): void
+    private static $pdo = null;
+
+    public static function bootPDO(): void
     {
+        // Carregar as variáveis de ambiente
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
-        echo "DRIVER" . $_ENV['DB_DRIVER'];
+        try {
+            // Criação da conexão PDO
+            $dsn = "mysql:host=" . $_ENV['DB_HOST'] . ";port=" . $_ENV['DB_PORT'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8";
+            self::$pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);
 
-        $capsule = new Capsule;
-        $capsule->addConnection([
-            'driver' => "mysql",
-            'host' => $_ENV['DB_HOST'],
-            'port' => $_ENV['DB_PORT'],
-            'database' => $_ENV['DB_NAME'],
-            'username' => $_ENV['DB_USER'],
-            'password' => $_ENV['DB_PASS'],
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-        ]);
+            // Definir o modo de erro para exceções
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+            echo "Conexão com o banco de dados estabelecida com sucesso!";
+        } catch (PDOException $e) {
+            echo "Erro de conexão: " . $e->getMessage();
+            exit;
+        }
+    }
+
+    // Método para obter a instância do PDO
+    public static function getPDO(): ?PDO
+    {
+        return self::$pdo;
     }
 }

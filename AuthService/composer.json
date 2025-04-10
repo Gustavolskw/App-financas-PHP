@@ -26,7 +26,8 @@
     "firebase/php-jwt": "^6.0",
     "predis/predis": "^2.0",
     "doctrine/migrations": "^3.9",
-    "symfony/yaml": "^7.2"
+    "symfony/yaml": "^7.2",
+    "ext-pdo": "*"
   },
   "minimum-stability": "stable",
   "scripts": {

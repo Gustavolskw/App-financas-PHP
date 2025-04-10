@@ -1,17 +1,16 @@
 <?php
 namespace Auth\Services;
 
-use Auth\Config\Database;
 use Auth\DTO\UserDTO;
 use Auth\Entity\User;
 use Auth\JWT\UtilJwt;
 use Auth\Message\DirectQueueProducer;
 use Auth\Message\FanoutExchangeProducer;
 use Auth\Services\RedisService;
+use Auth\Model\UserModel;
 
 class AuthService
 {
-    private $rabbitMQProducer;
 
     private $rabbitMQDirectQueue;
 
@@ -21,10 +20,11 @@ class AuthService
 
     private $utilJwt;
 
+    private $userModel;
+
     public function __construct()
     {
-        Database::bootEloquent();
-
+        $this->userModel = new UserModel();
         $this->redisService = new RedisService();
         $this->utilJwt = new UtilJwt();
         $this->rabbitMQDirectQueue = new DirectQueueProducer();
@@ -34,24 +34,24 @@ class AuthService
     public function loginUser(string $email, string $password): array
     {
 
-        $userOnBase = User::where('email', $email)->first();
+        $userOnBase = $this->userModel->findByEmail($email);
         if (!$userOnBase) {
             return $this->generateResponse('User or Password invalid!', 401);
         }
 
 
-        if (boolval($userOnBase->status) == false) {
+        if (!boolval($userOnBase->getStatus())) {
             return $this->generateResponse("Usuario Invalido!", 422);
         }
 
 
-        if (!password_verify($password, $userOnBase->password)) {
+        if (!password_verify($password, $userOnBase->getPassword())) {
             return $this->generateResponse('User or Password invalid!', 401);
         }
 
-        $oldTokenKey = "user:{$userOnBase->id}:token";
+        $oldTokenKey = "user:{$userOnBase->getId()}:token";
 
-        $this->redisService->porcessAndDelteTokenByUserId($oldTokenKey, $userOnBase->id);
+        $this->redisService->porcessAndDelteTokenByUserId($oldTokenKey, $userOnBase->getId());
 
         $payload = $this->utilJwt->buildPayload($userOnBase);
 
@@ -66,7 +66,7 @@ class AuthService
 
     public function register(string $name, string $email, string $password, int $role = User::ROLE_USER): array
     {
-        if (User::where('email', $email)->exists()) {
+        if ($this->userModel->userExistsByEmail($email)) {
             return $this->generateResponse('Email Invalido ou indisponivel!', 422);
         }
         if (!in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
