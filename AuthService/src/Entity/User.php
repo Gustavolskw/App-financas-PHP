@@ -2,7 +2,7 @@
 
 namespace Auth\Entity;
 
-class User
+class User extends DefaultEntity
 {
     private int $id;
     private string $name;

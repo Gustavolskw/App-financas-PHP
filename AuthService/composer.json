@@ -27,7 +27,8 @@
     "predis/predis": "^2.0",
     "doctrine/migrations": "^3.9",
     "symfony/yaml": "^7.2",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "nesbot/carbon": "^2.0"
   },
   "minimum-stability": "stable",
   "scripts": {
