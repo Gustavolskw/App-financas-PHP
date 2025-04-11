@@ -4,7 +4,6 @@ namespace Auth\Entity;
 
 class User extends DefaultEntity
 {
-    private int $id;
     private string $name;
     private string $email;
     private string $password;
@@ -15,7 +14,7 @@ class User extends DefaultEntity
     const ROLE_ADMIN = 2;
 
     // Construtor para facilitar a criação do objeto
-    public function __construct($id = null, $name = null, $email = null, $password = null, $role = null, $status = null)
+    public function __construct(?int $id, ?string $name, ?string $email, ?string $password, ?int $role, ?int $status)
     {
         $this->id = $id;
         $this->name = $name;
@@ -24,19 +23,6 @@ class User extends DefaultEntity
         $this->role = $role;
         $this->status = $status;
     }
-
-
-    // Getters e setters
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
     public function getName()
     {
         return $this->name;

@@ -4,16 +4,18 @@ namespace Auth\Model;
 
 use Auth\Entity\User;
 use Auth\Config\Database;
+use Exception;
 use PDO;
 
 class UserModel
 {
-    private $db;
+    private PDO $db;
 
     public function __construct()
     {
         $this->db = Database::getPDO();
     }
+
     public function findById($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
@@ -28,20 +30,44 @@ class UserModel
         return null;
     }
 
-
-    public function findByEmail(string $email):?User
+    public function findAll(): mixed
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $slqQuery = "SELECT * FROM users";
+        $stmt = $this->db->prepare($slqQuery);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $users = [];
+
+        foreach ($rows as $row) {
+            $user = new User(
+                $row['id'] ?? null,
+                $row['name'] ?? null,
+                $row['email'] ?? null,
+                $row['password'] ?? null,
+                $row['role'] ?? null,
+                $row['status'] ?? null,
+            );
+
+            $users[] = $user;
+        }
+
+        return $users;
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email LIKE :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $userArray = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($userArray){
-            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status']);
+        if ($userArray) {
+            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status'], $userArray['created_at'], $userArray['updated_at']);
         }
         return null;
     }
 
-     public function create(User $user):?User
+    public function create(User $user): ?User
     {
         $this->db->beginTransaction();
 
@@ -50,7 +76,7 @@ class UserModel
 
             $username = $user->getName();
             $userEmail = $user->getEmail();
-            $userPassword = $user->getPassword();
+            $userPassword = password_hash($user->getPassword(), PASSWORD_BCRYPT);
             $userRole = $user->getRole();
             $userStatus = $user->getStatus();
 
@@ -60,57 +86,82 @@ class UserModel
             $stmt->bindParam(':role', $userRole);
             $stmt->bindParam(':status', $userStatus);
 
-           
+
             if ($stmt->execute()) {
-                
+
                 $user->setId($this->db->lastInsertId());
 
                 $this->db->commit();
 
                 return $user;
             } else {
-                throw new \Exception('Falha ao inserir usuário.');
+                throw new Exception('Falha ao inserir usuário.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollBack();
             return null;
         }
     }
 
-    // Atualizar os dados de um usuário
-    public function update(User $user)
+    public function update(User $user, int $id)
     {
-        $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, password = :password, role = :role, status = :status WHERE id = :id");
+        $this->db->beginTransaction();
+        try {
 
+            $fieldMap = [
+                'name' => 'getName',
+                'email' => 'getEmail',
+                'password' => 'getPassword',
+                'role' => 'getRole',
+                'status' => 'getStatus',
+            ];
 
-        $username = $user->getName();
-        $userEmail = $user->getEmail();
-        $userPassword = $user->getPassword();
-        $userRole = $user->getRole();
-        $userStatus = $user->getStatus();
+            $setClauses = [];
+            $params = [];
 
-        $userId = $user->getId();
+            foreach ($fieldMap as $column => $getter) {
+                $value = $user->$getter();
+                if ($value !== null) {
+                    $setClauses[] = "$column = :$column";
+                    $params[":$column"] = $value;
+                }
+            }
 
+            if (empty($setClauses)) {
+                return null;
+            }
 
-        $stmt->bindParam(':name', $username);
-        $stmt->bindParam(':email', $userEmail);
-        $stmt->bindParam(':password', $userPassword);
-        $stmt->bindParam(':role', $userRole);
-        $stmt->bindParam(':status', $userStatus);
-        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+            $params[':id'] = $id;
+            $setSQL = implode(', ', $setClauses);
+            $sql = "UPDATE users SET $setSQL WHERE id = :id";
 
-        return $stmt->execute();
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            if ($stmt->execute()) {
+                $this->db->commit();
+                return $user;
+            }
+
+            throw new Exception("Error while updating user");
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return null;
+        }
     }
 
-    public function delete($id)
+    public function remove($id)
     {
-        $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE users SET status = 0 WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
 
-    public function userExistsByEmail(string $email):bool
+    public function userExistsByEmail(string $email): bool
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -120,5 +171,19 @@ class UserModel
             return true;
         }
         return false;
+    }
+
+    public function findByIdAndEmail(int $id, string $email): ?User
+    {
+        $sql = "SELECT FROM users WHERE id = :id AND email LIKE :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $userArray = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($userArray) {
+            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status'], $userArray['created_at'], $userArray['updated_at']);
+        }
+        return null;
     }
 }

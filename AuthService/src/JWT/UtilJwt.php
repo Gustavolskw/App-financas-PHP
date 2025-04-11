@@ -14,9 +14,9 @@ class UtilJwt
     {
         $payload = [
             'iss' => 'auth_service',
-            'sub' => $user->id,
-            'email' => $user->email,
-            'role' => $user->role,
+            'sub' => $user->getId(),
+            'email' => $user->getEmail(),
+            'role' => $user->getRole(),
             'iat' => time(),
             'exp' => time() + 3600,
         ];

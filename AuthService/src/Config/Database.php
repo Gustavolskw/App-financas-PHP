@@ -1,38 +1,42 @@
 <?php
+
 namespace Auth\Config;
 
-use Dotenv\Dotenv;
 use PDO;
 use PDOException;
+use Dotenv\Dotenv;
 
 class Database
 {
-    private static $pdo = null;
+    private static ?PDO $pdo = null;
 
-    public static function bootPDO(): void
-    {
-        // Carregar as variáveis de ambiente
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->load();
-
-        try {
-            // Criação da conexão PDO
-            $dsn = "mysql:host=" . $_ENV['DB_HOST'] . ";port=" . $_ENV['DB_PORT'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8";
-            self::$pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);
-
-            // Definir o modo de erro para exceções
-            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            echo "Conexão com o banco de dados estabelecida com sucesso!";
-        } catch (PDOException $e) {
-            echo "Erro de conexão: " . $e->getMessage();
-            exit;
-        }
-    }
-
-    // Método para obter a instância do PDO
     public static function getPDO(): ?PDO
     {
+        if (self::$pdo === null) {
+            try {
+                // Carrega variáveis de ambiente (.env)
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+                $dotenv->safeLoad();
+
+                $host = $_ENV['DB_HOST'] ?? 'localhost';
+                $port = $_ENV['DB_PORT'] ?? '3306';
+                $dbname = $_ENV['DB_NAME'] ?? 'test';
+                $username = $_ENV['DB_USER'] ?? 'root';
+                $password = $_ENV['DB_PASS'] ?? '';
+
+                $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+
+                self::$pdo = new PDO($dsn, $username, $password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            } catch (PDOException $e) {
+                echo "Erro ao conectar ao banco de dados: " . $e->getMessage();
+                exit; // evita continuar com conexão nula
+            }
+        }
+
         return self::$pdo;
     }
 }
