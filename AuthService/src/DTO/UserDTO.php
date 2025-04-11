@@ -2,13 +2,15 @@
 
 namespace Auth\DTO;
 
+use Auth\Entity\User;
+
 class UserDTO
 {
-    public int $id;
-    public string $name;
-    public string $email;
-    public string|int $role;
-    public int $status;
+    private int $id;
+    private string $name;
+    private string $email;
+    private string|int $role;
+    private int $status;
 
     public function __construct(int $id, string $name, string $email, $role, $status)
     {
@@ -30,8 +32,8 @@ class UserDTO
         ];
     }
 
-    public static function fromArray(array $data): self
+    public static function fromArray(User $user): self
     {
-        return new self($data['id'], $data['name'], $data['email'], $data['role'], $data['status']);
+        return new self($user->getId(), $user->getName(), $user->getEmail(), $user->getRole(), $user->getStatus());
     }
 }
