@@ -1,3 +1,7 @@
+```bash
+composer create-project slim/slim-skeleton backend
+```
+
 dockerfile
 
 ```dockerfile
