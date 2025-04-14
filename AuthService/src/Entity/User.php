@@ -23,6 +23,7 @@ class User extends DefaultEntity
         $this->role = $role;
         $this->status = $status;
     }
+
     public function getName()
     {
         return $this->name;

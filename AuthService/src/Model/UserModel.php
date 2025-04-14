@@ -175,14 +175,14 @@ class UserModel
 
     public function findByIdAndEmail(int $id, string $email): ?User
     {
-        $sql = "SELECT FROM users WHERE id = :id AND email LIKE :email";
+        $sql = "SELECT * FROM users WHERE id = :id AND email LIKE :email";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $userArray = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($userArray) {
-            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status'], $userArray['created_at'], $userArray['updated_at']);
+            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status']);
         }
         return null;
     }

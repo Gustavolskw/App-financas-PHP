@@ -8,6 +8,7 @@ use Auth\Message\DirectQueueProducer;
 use Auth\Message\FanoutExchangeProducer;
 use Auth\Services\RedisService;
 use Auth\Model\UserModel;
+use Illuminate\Container\EntryNotFoundException;
 
 class AuthService
 {
@@ -74,15 +75,11 @@ class AuthService
         }
 
         $newUser = new User(null, $name, $email, $password, $role, true);
-        var_dump($newUser);
         $user = $this->userModel->create($newUser);
-        var_dump($user);
         $payload = $this->utilJwt->buildPayload($user);
         $token = $this->utilJwt->encodeJwt($payload);
 
         $this->redisService->setToken($token, 3600, $user);
-
-
 
         $userResponse = UserDTO::fromArray($user)->toArray();
 
@@ -150,36 +147,53 @@ class AuthService
 
         if ($decoded->role >= User::ROLE_ADMIN) {
             $user = $this->userModel->findById($id);
+        
         } elseif ($userId == $id) {
             $user = $this->userModel->findById($userId);
         } else {
             return $this->generateResponse("Action not allowed", 403);
+        }
+        if($user == null) {
+            throw new EntryNotFoundException("Usuario não encontrado!");
         }
         if ($status == null) {
             if (!$user || boolval($user->getStatus()) === false) {
                 return $this->generateResponse("Usuario Inativado, reative-o para poder Atualizar!", 422);
             }
         }
-
-        $updateUser = new User(null, $name, $email, $password, $role, $status, null, null);
+        $user->setName($name ?? $user->getName());
+        $user->setEmail($email ?? $user->getEmail());
+        if(isset($password) && $password != null){
+            $user->setPassword(password_hash($password, PASSWORD_BCRYPT));
+        }
+        if ($userId != $id) {
+            $user->setRole($role ?? $user->getRole());
+        } else if ($userId == $id && $role >= User::ROLE_ADMIN) {
+            $user->setRole($role ?? $user->getRole());
+        }
+        $user->setStatus($status ?? $user->getStatus());
 
         if (isset($status) && boolval($user->getStatus())) {
             $this->rabbitMQFanOutExge->publish($_ENV['RABBITMQ_FAN_OUT_EXCHANGE_REACT'], ['userId' => $user->getId()]);
         }
 
+
+        $userUpdate = $this->userModel->update($user, $user->getId());
+
+
         $this->cleanUserCache();
         if ($userId == $id) {
             $this->redisService->removeToken($token);
 
-            $payload = $this->utilJwt->buildPayload($user);
+            $payload = $this->utilJwt->buildPayload($userUpdate);
 
             $tokenNew = $this->utilJwt->encodeJwt($payload);
 
-            $this->redisService->setToken($token, 3600, $user);
+            $this->redisService->setToken($token, 3600, $userUpdate);
 
-            return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($user)->toArray(), $tokenNew);
+            return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($userUpdate)->toArray(), $tokenNew);
         }
-        return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($user)->toArray());
+        return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($userUpdate)->toArray());
 
     }
 

@@ -5,6 +5,7 @@ use Auth\Entity\User;
 use Auth\Services\AuthService;
 use Auth\Translations\ValidationMessages;
 use Exception;
+use Illuminate\Container\EntryNotFoundException;
 use Illuminate\Validation\Factory as ValidationFactory;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
@@ -177,6 +178,9 @@ class AuthController
 
             $this->resp->response($result, 200, $response);
         } catch (Exception $e) {
+            if($e instanceof EntryNotFoundException){
+                $this->resp->exceptionResponse($e, $response);
+            }
             $this->resp->exceptionResponse($e, $response);
         }
     }
