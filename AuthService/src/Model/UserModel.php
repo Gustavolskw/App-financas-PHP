@@ -62,7 +62,7 @@ class UserModel
         $stmt->execute();
         $userArray = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($userArray) {
-            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status'], $userArray['created_at'], $userArray['updated_at']);
+            return new User($userArray['id'], $userArray['name'], $userArray['email'], $userArray['password'], $userArray['role'], $userArray['status']);
         }
         return null;
     }

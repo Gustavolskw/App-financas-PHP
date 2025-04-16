@@ -125,7 +125,7 @@ class AuthService
         return $this->generateResponse("Lista de Usuarios", 200, array_map(fn($dto) => $dto->toArray(), $userDTOs));
     }
 
-    public function updateUser(string $token, int $id, ?string $name, ?string $email, ?string $password, ?int $role, bool $status): array
+    public function updateUser(string $token, int $id, ?string $name, ?string $email, ?string $password, ?int $role, ?bool $status): array
     {
 
         if (isset($role) && !in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
@@ -147,13 +147,13 @@ class AuthService
 
         if ($decoded->role >= User::ROLE_ADMIN) {
             $user = $this->userModel->findById($id);
-        
+
         } elseif ($userId == $id) {
             $user = $this->userModel->findById($userId);
         } else {
             return $this->generateResponse("Action not allowed", 403);
         }
-        if($user == null) {
+        if ($user == null) {
             throw new EntryNotFoundException("Usuario não encontrado!");
         }
         if ($status == null) {
@@ -163,7 +163,7 @@ class AuthService
         }
         $user->setName($name ?? $user->getName());
         $user->setEmail($email ?? $user->getEmail());
-        if(isset($password) && $password != null){
+        if (isset($password) && $password != null) {
             $user->setPassword(password_hash($password, PASSWORD_BCRYPT));
         }
         if ($userId != $id) {
