@@ -1,0 +1,29 @@
+2025-04-16 16:48:35,807 INFO Set uid to user 0 succeeded
+2025-04-16 16:48:35,808 INFO supervisord started with pid 1
+2025-04-16 16:48:36,809 INFO spawnerr: can't find command 'apache2-foreground'
+2025-04-16 16:48:37,811 INFO spawnerr: can't find command 'apache2-foreground'
+2025-04-16 16:48:39,814 INFO spawnerr: can't find command 'apache2-foreground'
+2025-04-16 16:48:42,818 INFO spawnerr: can't find command 'apache2-foreground'
+2025-04-16 16:48:42,818 INFO gave up: apache entered FATAL state, too many start retries too quickly
+2025-04-16 16:49:12,851 WARN received SIGTERM indicating exit request
+2025-04-16 16:49:16,004 INFO Set uid to user 0 succeeded
+2025-04-16 16:49:16,006 INFO supervisord started with pid 1
+2025-04-16 16:49:17,009 INFO spawned: 'apache' with pid 7
+2025-04-16 16:49:18,054 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-16 16:53:04,303 WARN received SIGTERM indicating exit request
+2025-04-16 16:53:04,305 INFO waiting for apache to die
+2025-04-16 16:53:04,306 WARN stopped: apache (terminated by SIGTERM)
+2025-04-16 16:53:09,669 INFO Set uid to user 0 succeeded
+2025-04-16 16:53:09,672 INFO supervisord started with pid 1
+2025-04-16 16:53:10,674 INFO spawned: 'apache' with pid 7
+2025-04-16 16:53:11,737 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-16 17:02:28,456 WARN received SIGTERM indicating exit request
+2025-04-16 17:02:28,459 INFO waiting for apache to die
+2025-04-16 17:02:28,460 WARN stopped: apache (terminated by SIGTERM)
+2025-04-16 17:02:44,966 INFO Set uid to user 0 succeeded
+2025-04-16 17:02:44,968 INFO supervisord started with pid 1
+2025-04-16 17:02:45,975 INFO spawned: 'apache' with pid 7
+2025-04-16 17:02:47,033 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-16 17:11:16,671 WARN received SIGTERM indicating exit request
+2025-04-16 17:11:16,674 INFO waiting for apache to die
+2025-04-16 17:11:16,674 WARN stopped: apache (terminated by SIGTERM)

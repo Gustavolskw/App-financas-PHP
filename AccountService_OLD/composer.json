@@ -1,0 +1,35 @@
+{
+  "name": "account/service",
+  "description": "Microservice to Manage the Users accounts",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Acc\\": "src/",
+      "Acc\\Migrations\\": "migrations/",
+      "Acc\\Translations\\": "src/Translations/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Gustavolskw",
+      "email": "gustavolschmidt13@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "php-amqplib/php-amqplib": "^3.5",
+    "illuminate/database": "^10.0",
+    "illuminate/validation": "^10.0",
+    "openswoole/core": "22.1.5",
+    "dompdf/dompdf": "^3.1",
+    "vlucas/phpdotenv": "^5.6",
+    "firebase/php-jwt": "^6.0",
+    "guzzlehttp/guzzle": "^7.4",
+    "doctrine/migrations": "^3.9",
+    "symfony/yaml": "^7.2"
+  },
+  "minimum-stability": "stable",
+  "scripts": {
+    "start": "php server.php"
+  }
+}
