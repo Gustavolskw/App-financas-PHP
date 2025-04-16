@@ -236,4 +236,29 @@ class AuthController
             $this->resp->exceptionResponse($e, $response);
         }
     }
+
+
+    public function getUserById(Request $request, Response $response, int $id)
+    {
+
+        $data = ['id' => $id];
+        $rules = [
+            'id' => 'required|integer',
+        ];
+        $validation = $this->validator->make($data, $rules, ValidationMessages::getMessages());
+
+        if ($validation->fails()) {
+            $this->resp->response(['error' => $validation->errors()->all()], 422, $response);
+        }
+
+        try{
+            $valData = $validation->validated();
+            $result = $this->authService->getUserById($valData['id']);
+            $this->resp->response($result, 200, $response);
+        }catch(EntryNotFoundException $e) {
+            $this->resp->response(null, 204, $response);
+        }catch(Exception $e){
+            $this->resp->exceptionResponse($e, $response);
+        }
+    }
 }

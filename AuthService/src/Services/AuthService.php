@@ -100,6 +100,15 @@ class AuthService
         return $this->generateResponse('Usuario encontrado!', 200, UserDTO::fromArray($user)->toArray());
     }
 
+    public function getUserById(int $userId): array
+    {
+        $user = $this->userModel->findById($userId);
+        if ($user == null) {
+            throw new EntryNotFoundException('User nto found!');
+        }
+        return $this->generateResponse('User Found!', 200, UserDTO::fromArray($user)->toArray());
+    }
+
     public function getAllUsers(): array
     {
 
