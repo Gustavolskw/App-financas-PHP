@@ -1,40 +1,71 @@
 <?php
+
 namespace Auth\Entity;
 
-use Illuminate\Database\Eloquent\Model;
-
-/**
- *
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property int $role
- * @property bool $status
- * @mixin \Illuminate\Database\Eloquent\Model
- * @package Auth\Entity
- */
-class User extends Model
+class User extends DefaultEntity
 {
-    protected $table = 'users';
-    protected $fillable = ['name', 'email', 'password', 'role', 'status'];
-    public $timestamps = false;
+    private string $name;
+    private string $email;
+    private string $password;
+    private int $role;
+    private bool $status;
 
-    // Valores permitidos para o ENUM
     const ROLE_USER = 1;
     const ROLE_ADMIN = 2;
 
-    public function setPasswordAttribute($value)
+    // Construtor para facilitar a criação do objeto
+    public function __construct(?int $id, ?string $name, ?string $email, ?string $password, ?int $role, ?int $status)
     {
-        $this->attributes['password'] = password_hash($value, PASSWORD_BCRYPT);
-    }
-    public function isAdmin(): bool
-    {
-        return $this->role === self::ROLE_ADMIN;
+        $this->id = $id;
+        $this->name = $name;
+        $this->email = $email;
+        $this->password = $password;
+        $this->role = $role;
+        $this->status = $status;
     }
 
-    public function isUser(): bool
+    public function getName()
     {
-        return $this->role === self::ROLE_USER;
+        return $this->name;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function getRole()
+    {
+        return $this->role;
+    }
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }

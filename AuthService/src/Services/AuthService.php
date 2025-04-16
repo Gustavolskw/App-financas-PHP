@@ -1,17 +1,17 @@
 <?php
 namespace Auth\Services;
 
-use Auth\Config\Database;
 use Auth\DTO\UserDTO;
 use Auth\Entity\User;
 use Auth\JWT\UtilJwt;
 use Auth\Message\DirectQueueProducer;
 use Auth\Message\FanoutExchangeProducer;
 use Auth\Services\RedisService;
+use Auth\Model\UserModel;
+use Illuminate\Container\EntryNotFoundException;
 
 class AuthService
 {
-    private $rabbitMQProducer;
 
     private $rabbitMQDirectQueue;
 
@@ -21,10 +21,11 @@ class AuthService
 
     private $utilJwt;
 
+    private $userModel;
+
     public function __construct()
     {
-        Database::bootEloquent();
-
+        $this->userModel = new UserModel();
         $this->redisService = new RedisService();
         $this->utilJwt = new UtilJwt();
         $this->rabbitMQDirectQueue = new DirectQueueProducer();
@@ -34,24 +35,24 @@ class AuthService
     public function loginUser(string $email, string $password): array
     {
 
-        $userOnBase = User::where('email', $email)->first();
+        $userOnBase = $this->userModel->findByEmail($email);
         if (!$userOnBase) {
             return $this->generateResponse('User or Password invalid!', 401);
         }
 
 
-        if (boolval($userOnBase->status) == false) {
+        if (!boolval($userOnBase->getStatus())) {
             return $this->generateResponse("Usuario Invalido!", 422);
         }
 
 
-        if (!password_verify($password, $userOnBase->password)) {
+        if (!password_verify($password, $userOnBase->getPassword())) {
             return $this->generateResponse('User or Password invalid!', 401);
         }
 
-        $oldTokenKey = "user:{$userOnBase->id}:token";
+        $oldTokenKey = "user:{$userOnBase->getId()}:token";
 
-        $this->redisService->porcessAndDelteTokenByUserId($oldTokenKey, $userOnBase->id);
+        $this->redisService->porcessAndDelteTokenByUserId($oldTokenKey, $userOnBase->getId());
 
         $payload = $this->utilJwt->buildPayload($userOnBase);
 
@@ -66,33 +67,23 @@ class AuthService
 
     public function register(string $name, string $email, string $password, int $role = User::ROLE_USER): array
     {
-        if (User::where('email', $email)->exists()) {
+        if ($this->userModel->userExistsByEmail($email)) {
             return $this->generateResponse('Email Invalido ou indisponivel!', 422);
         }
         if (!in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
             return $this->generateResponse('Role inválido', 422);
         }
 
-        $user = User::create([
-            'name' => $name,
-            'email' => $email,
-            'password' => $password,
-            'role' => $role,
-            'status' => true
-        ]);
-
-        $user->save();
-
+        $newUser = new User(null, $name, $email, $password, $role, true);
+        $user = $this->userModel->create($newUser);
         $payload = $this->utilJwt->buildPayload($user);
         $token = $this->utilJwt->encodeJwt($payload);
 
         $this->redisService->setToken($token, 3600, $user);
 
+        $userResponse = UserDTO::fromArray($user)->toArray();
 
-
-        $userResponse = UserDTO::fromArray($user->toArray())->toArray();
-
-        $this->rabbitMQDirectQueue->publish($_ENV['RABBITMQ_QUEUE'], ['userId' => $user->id, 'email' => $user->email]);
+        $this->rabbitMQDirectQueue->publish($_ENV['RABBITMQ_QUEUE'], ['userId' => $user->getId(), 'email' => $user->getEmail()]);
 
         $this->cleanUserCache();
 
@@ -101,12 +92,21 @@ class AuthService
 
     public function getUserByEmail(string $email): array
     {
-        $user = User::where('email', "LIKE", $email)->first();
+        $user = $this->userModel->findByEmail($email);
         if ($user == null) {
             return $this->generateResponse('Usuario nao encontrado!', 404);
         }
         //return $user->toArray();
-        return $this->generateResponse('Usuario encontrado!', 200, UserDTO::fromArray($user->toArray())->toArray());
+        return $this->generateResponse('Usuario encontrado!', 200, UserDTO::fromArray($user)->toArray());
+    }
+
+    public function getUserById(int $userId): array
+    {
+        $user = $this->userModel->findById($userId);
+        if ($user == null) {
+            throw new EntryNotFoundException('User nto found!');
+        }
+        return $this->generateResponse('User Found!', 200, UserDTO::fromArray($user)->toArray());
     }
 
     public function getAllUsers(): array
@@ -114,7 +114,7 @@ class AuthService
 
         $usersCached = $this->redisService->getCachedData("userCache", "users");
         if (!$usersCached) {
-            $users = User::all()->toArray();
+            $users = $this->userModel->findAll();
             if ($users == null) {
                 $this->generateResponse("Sem usuarios nos registros!", 200);
             }
@@ -134,10 +134,10 @@ class AuthService
         return $this->generateResponse("Lista de Usuarios", 200, array_map(fn($dto) => $dto->toArray(), $userDTOs));
     }
 
-    public function updateUser(string $token, int $id, ?string $name, ?string $email, ?string $password, ?int $role = User::ROLE_USER, bool $status): array
+    public function updateUser(string $token, int $id, ?string $name, ?string $email, ?string $password, ?int $role, ?bool $status): array
     {
 
-        if (!in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
+        if (isset($role) && !in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
             return $this->generateResponse("Cargo invalido!", 422);
         }
         $decoded = $this->utilJwt->decodeJwt($token);
@@ -150,52 +150,59 @@ class AuthService
             return $this->generateResponse('Invalid or missing token', 401);
         }
 
-        if ($email && User::where('email', $email)->exists() && $email !== $userEmail) {
+        if ($email && $this->userModel->userExistsByEmail($email) && $email !== $userEmail) {
             return $this->generateResponse("Email already in use", 422);
         }
 
         if ($decoded->role >= User::ROLE_ADMIN) {
-            $user = User::where("id", "=", $id)->first();
+            $user = $this->userModel->findById($id);
+
         } elseif ($userId == $id) {
-            $user = User::where("id", "=", $userId)->first();
+            $user = $this->userModel->findById($userId);
         } else {
             return $this->generateResponse("Action not allowed", 403);
         }
+        if ($user == null) {
+            throw new EntryNotFoundException("Usuario não encontrado!");
+        }
         if ($status == null) {
-            if (!$user || boolval($user->status) === false) {
+            if (!$user || boolval($user->getStatus()) === false) {
                 return $this->generateResponse("Usuario Inativado, reative-o para poder Atualizar!", 422);
             }
         }
-
-        $user->name = $name ?? $user->name;
-        $user->email = $email ?? $user->email;
-        $user->password = $password ?? $user->password;
+        $user->setName($name ?? $user->getName());
+        $user->setEmail($email ?? $user->getEmail());
+        if (isset($password) && $password != null) {
+            $user->setPassword(password_hash($password, PASSWORD_BCRYPT));
+        }
         if ($userId != $id) {
-            $user->role = $role ?? $user->role;
+            $user->setRole($role ?? $user->getRole());
         } else if ($userId == $id && $role >= User::ROLE_ADMIN) {
-            $user->role = $role ?? $user->role;
+            $user->setRole($role ?? $user->getRole());
         }
-        $user->status = $status ?? $user->status;
+        $user->setStatus($status ?? $user->getStatus());
 
-        if (isset($status) && boolval($user->status)) {
-            $this->rabbitMQFanOutExge->publish($_ENV['RABBITMQ_FAN_OUT_EXCHANGE_REACT'], ['userId' => $user->id]);
+        if (isset($status) && boolval($user->getStatus())) {
+            $this->rabbitMQFanOutExge->publish($_ENV['RABBITMQ_FAN_OUT_EXCHANGE_REACT'], ['userId' => $user->getId()]);
         }
 
-        $user->save();
+
+        $userUpdate = $this->userModel->update($user, $user->getId());
+
 
         $this->cleanUserCache();
         if ($userId == $id) {
             $this->redisService->removeToken($token);
 
-            $payload = $this->utilJwt->buildPayload($user);
+            $payload = $this->utilJwt->buildPayload($userUpdate);
 
             $tokenNew = $this->utilJwt->encodeJwt($payload);
 
-            $this->redisService->setToken($token, 3600, $user);
+            $this->redisService->setToken($token, 3600, $userUpdate);
 
-            return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($user->toArray())->toArray(), $tokenNew);
+            return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($userUpdate)->toArray(), $tokenNew);
         }
-        return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($user->toArray())->toArray());
+        return $this->generateResponse('User updated successfully', 200, UserDTO::fromArray($userUpdate)->toArray());
 
     }
 
@@ -207,28 +214,23 @@ class AuthService
         $decodedId = $decoded->sub;
         $decodedRole = $decoded->role;
 
-        echo "$decodedId e o id vindo do request $id \n";
-
         if ($decodedId == $id) {
-            $userFound = User::where('id', '=', $decodedId)->first();
-
+            $userFound = $this->userModel->findById($decodedId);
             $message = "Funcoes desativadas, mas accesso mantido ate a validade da sua sessao";
         } else if ($decodedRole == User::ROLE_ADMIN && $decodedId != $id) {
-
-            $userFound = User::where('id', '=', $id)->first();
+            $userFound = $this->userModel->findById($id);
             $message = "Funcoes desativadas, mas accesso mantido ate a validade da sessao do usuario";
         } else {
             return $this->generateResponse("Action not allowed", 403);
         }
 
-        if ($userFound->status == false) {
+        if ($userFound->getStatus() == false) {
             return $this->generateResponse("Usuario ja Inativado!", 200);
         }
 
-        $userFound->status = false;
-        $userFound->save();
+        $this->userModel->remove($userFound->getId());
 
-        $this->rabbitMQFanOutExge->publish($_ENV['RABBITMQ_FAN_OUT_EXCHANGE_INACT'], ['userId' => $userFound->id]);
+        $this->rabbitMQFanOutExge->publish($_ENV['RABBITMQ_FAN_OUT_EXCHANGE_INACT'], ['userId' => $userFound->getId()]);
 
         $this->cleanUserCache();
         return $this->generateResponse("Usuario Inativado com Sucesso!", 200, ["message" => $message]);
@@ -237,10 +239,10 @@ class AuthService
 
     public function verifyUser(int $id, string $email): bool
     {
-        $user = User::where('id', "=", $id)->where('email', "LIKE", $email)->first();
+        $user = $this->userModel->findByIdAndEmail($id, $email);
         if ($user == null) {
             return false;
-        } else if (boolval($user->status) == false) {
+        } else if (boolval($user->getStatus()) == false) {
             return false;
         }
         return true;
