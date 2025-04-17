@@ -52,7 +52,7 @@ services:
     ports:
       - "9501"
     volumes:
-      - ./src:/app # mount only the `src` folder to avoid permission issues
+      - ./AuthService:/app # mount only the `src` folder to avoid permission issues
     env_file:
       - ./AuthService/.env
     command: ["sh", "-c", "sleep 10 && php server.php"] # Delay startup by 10 seconds
@@ -82,7 +82,7 @@ services:
     ports:
       - "80:80" # Porta para acessar os serviços
     volumes:
-       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - auth-service
       #- account-service

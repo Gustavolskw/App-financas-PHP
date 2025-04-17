@@ -3,23 +3,40 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use Acc\Message\CaixaUserCreationQueueConsumer;
+use Acc\Message\CaixaUserInactivationExchangeConsumer;
+use Acc\Message\CaixaUserReactivationExchangeConsumer;
 use Dotenv\Dotenv;
-use parallel\{Runtime, Future};
-use App\Application\Message\CaixaUserCreationQueueConsumer;
-use App\Application\Message\CaixaUserInactivationExchangeConsumer;
-use App\Application\Message\CaixaUserReactivationExchangeConsumer;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-function runConsumer($consumer) {
-    $consumer->consume();
+function fork(callable $callback)
+{
+    $pid = pcntl_fork();
+    if ($pid == -1) {
+        die('Erro ao criar processo');
+    } elseif ($pid === 0) {
+        $callback();
+        exit(0);
+    }
 }
 
-$future1 = (new Runtime())->run('runConsumer', [new CaixaUserCreationQueueConsumer()]);
-$future2 = (new Runtime())->run('runConsumer', [new CaixaUserInactivationExchangeConsumer()]);
-$future3 = (new Runtime())->run('runConsumer', [new CaixaUserReactivationExchangeConsumer()]);
+fork(function () {
+    $consumer = new CaixaUserCreationQueueConsumer();
+    $consumer->consumeFromQueue($_ENV['RABBITMQ_CONSUME_QUEUE']);
+});
 
-$future1->value();
-$future2->value();
-$future3->value();
+fork(function () {
+    $consumer = new CaixaUserInactivationExchangeConsumer();
+    $consumer->consumeFromExchange();
+});
+
+fork(function () {
+    $consumer = new CaixaUserReactivationExchangeConsumer();
+    $consumer->consumeFromExchange();
+});
+
+// Aguarda todos os filhos
+while (pcntl_wait($status) != -1)
+    ;
