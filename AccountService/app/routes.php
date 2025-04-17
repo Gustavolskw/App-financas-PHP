@@ -24,4 +24,9 @@ return function (App $app) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
     });
+
+
+    $app->group("/account", function(Group $group){
+        $group->get("", AccountController::class);
+    });
 };
