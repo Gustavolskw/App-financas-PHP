@@ -1,34 +1,42 @@
-# Use PHP 8.4 image
-FROM php:8.4-cli
+# Dockerfile
+FROM php:8.2-apache
 
-# Install required extensions and tools
+# Instala extensoes e ferramentas necessarias
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev inotify-tools libssl-dev libcurl4-openssl-dev \
-    && docker-php-ext-install zip sockets pdo pdo_mysql \
-    && pecl install openswoole \
-    && docker-php-ext-enable openswoole
+    libzip-dev zip unzip git curl libpq-dev \
+    supervisor \
+    && docker-php-ext-install pdo pdo_mysql \
+    && apt-get clean
 
-# Install Composer (latest version)
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /
+COPY composer.json /var/www/html
 
-# Copy composer files first (to install dependencies early)
-COPY composer.json ./
-
-# Install PHP dependencies
 RUN composer install --no-dev --prefer-dist --no-interaction
+
+RUN a2enmod rewrite
+
+WORKDIR /var/www/html
 
 # Run composer dump-autoload to optimize the autoloader
 RUN composer dump-autoload --optimize
 
+# Ativa o mod_rewrite do Apache
+RUN a2enmod rewrite
 
-# Copy the rest of the application code
-COPY . .
+# Copia arquivos
+COPY . /var/www/html
+COPY apache/supervisord.conf /etc/supervisord.conf
 
-# Expose the port used by OpenSwoole server
-EXPOSE 9501
+# Permissões
+RUN chown -R www-data:www-data /var/www/html
 
-# Default command to start the PHP server
-CMD ["php", "server.php"]
+
+RUN sed -i 's/80/8081/g' /etc/apache2/ports.conf
+RUN sed -i 's/:80>/:8081>/g' /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 8081
+
+# Define entrypoint
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

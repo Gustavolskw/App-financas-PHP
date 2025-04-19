@@ -1,0 +1,8 @@
+2025-04-17 15:54:40,513 INFO Set uid to user 0 succeeded
+2025-04-17 15:54:40,519 INFO supervisord started with pid 1
+2025-04-17 15:54:41,537 INFO spawned: 'apache' with pid 7
+2025-04-17 15:54:43,083 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-17 16:12:40,128 INFO Set uid to user 0 succeeded
+2025-04-17 16:12:40,130 INFO supervisord started with pid 1
+2025-04-17 16:12:41,134 INFO spawned: 'apache' with pid 7
+2025-04-17 16:12:42,277 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
