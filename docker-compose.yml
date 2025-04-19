@@ -63,7 +63,7 @@ services:
     ports:
       - "9501"
     volumes:
-      - ./src:/app # Mounting the `src` folder directly
+      - ./AuthService:/app # Mounting the `src` folder directly
     env_file:
       - ./AuthService/.env
     command: ["sh", "-c", "sleep 10 && php server.php"]
