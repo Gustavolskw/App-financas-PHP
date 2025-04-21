@@ -9,17 +9,26 @@ use DateTimeImmutable;
 class Account
 {
 
-    private $id;
-    private $userId;
-    private $userEmail;
-    private $name;
-    private $description;
-    private $status;
-    private $createdAt;
-    private $updatedAt;
+    private ?int $id;
+    private int $userId;
+    private string $userEmail;
+    private string $name;
+    private string $description;
+    private bool $status;
+    private ?DateTimeImmutable $createdAt;
+    private ?DateTimeImmutable $updatedAt;
 
 
-    public function __construct(?int $id, int $userId, string $userEmail, string $name, string $description, bool $status, ?DateTimeImmutable $createdAt, ?DateTimeImmutable $updatedAt){
+    public function __construct(
+        ?int $id,
+        int $userId,
+        string $userEmail,
+        string $name,
+        string $description,
+        bool $status,
+        ?DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $updatedAt
+    ) {
         $this->id = $id;
         $this->userId = $userId;
         $this->userEmail = $userEmail;
@@ -103,5 +112,18 @@ class Account
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+
+    public function toString():string
+    {
+        return "Account [id={$this->id},\n
+         userId={$this->userId},\n
+         userEmail={$this->userEmail},\n 
+         name={$this->name},\n
+         description={$this->description},\n
+         status={$this->status},\n
+         createdAt={$this->createdAt?->format('Y-m-d H:i:s')},\n
+         updatedAt={$this->updatedAt?->format('Y-m-d H:i:s')}]";
     }
 }

@@ -69,6 +69,8 @@ services:
     command: ["sh", "-c", "sleep 10 && php server.php"]
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
     networks:
       - fin-app
 
@@ -85,6 +87,7 @@ services:
       - ./AccountService/.env
     depends_on:
       - rabbitmq
+      - mysql
     networks:
       - fin-app
 

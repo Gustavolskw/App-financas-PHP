@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\Account\ListAccountsAction;
+use App\Application\Actions\Account\ViewAccountAction;
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,7 +28,8 @@ return function (App $app) {
     });
 
 
-    $app->group("/account", function(Group $group){
-        $group->get("", AccountController::class);
+    $app->group("/accounts", function(Group $group){
+        $group->get("", ListAccountsAction::class);
+        $group->get("/{id}", ViewAccountAction::class);
     });
 };

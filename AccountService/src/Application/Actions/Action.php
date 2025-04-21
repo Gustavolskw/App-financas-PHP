@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Application\Actions;
 
 use App\Domain\DomainException\DomainRecordNotFoundException;
+use Illuminate\Validation\Factory as ValidationFactory;
+use Illuminate\Translation\ArrayLoader;
+use Illuminate\Translation\Translator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -13,23 +16,25 @@ use Slim\Exception\HttpNotFoundException;
 
 abstract class Action
 {
-    protected LoggerInterface $logger;
 
     protected Request $request;
 
     protected Response $response;
 
+    protected ValidationFactory $validator;
+
+    protected LoggerInterface $logger;
+
     protected array $args;
 
-    public function __construct(LoggerInterface $logger)
-    {
+    public function __construct(
+        LoggerInterface $logger
+    ) {
         $this->logger = $logger;
+        $loader = new ArrayLoader();
+        $translator = new Translator($loader, 'en');
+        $this->validator = new ValidationFactory($translator);
     }
-
-    /**
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
-     */
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $this->request = $request;
@@ -52,7 +57,7 @@ abstract class Action
     /**
      * @return array|object
      */
-    protected function getFormData()
+    protected function getFormData(): object|array
     {
         return $this->request->getParsedBody();
     }
@@ -61,7 +66,7 @@ abstract class Action
      * @return mixed
      * @throws HttpBadRequestException
      */
-    protected function resolveArg(string $name)
+    protected function resolveArg(string $name): mixed
     {
         if (!isset($this->args[$name])) {
             throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");

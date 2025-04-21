@@ -5,7 +5,7 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip git curl libpq-dev \
     supervisor \
-    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install zip sockets pdo pdo_mysql \
     && apt-get clean
 
 # Instala Composer
@@ -31,6 +31,11 @@ COPY apache/supervisord.conf /etc/supervisord.conf
 
 # Permissões
 RUN chown -R www-data:www-data /var/www/html
+
+RUN chmod -R 755 /var/www/html
+RUN chown -R 755 /var/www/html/
+RUN chmod -R 755 /var/www/html/logs
+RUN chown -R 755 /var/www/html/logs
 
 
 RUN sed -i 's/80/8081/g' /etc/apache2/ports.conf
