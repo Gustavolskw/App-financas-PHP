@@ -66,3 +66,7 @@
 2025-04-21 16:15:59,116 INFO supervisord started with pid 1
 2025-04-21 16:16:00,118 INFO spawned: 'apache' with pid 7
 2025-04-21 16:16:01,168 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 22:56:20,055 INFO Set uid to user 0 succeeded
+2025-04-21 22:56:20,058 INFO supervisord started with pid 1
+2025-04-21 22:56:21,060 INFO spawned: 'apache' with pid 7
+2025-04-21 22:56:22,164 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

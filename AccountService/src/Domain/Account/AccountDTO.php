@@ -5,7 +5,6 @@ namespace App\Domain\Account;
 use App\Domain\Account\Account;
 use DateTimeImmutable;
 
-
 class AccountDTO
 {
     private int $id;
@@ -13,8 +12,33 @@ class AccountDTO
     private string $userEmail;
     private string $name;
     private string $description;
-    private int $status;
+    private bool $status;
     private DateTimeImmutable $createdAt;
     private DateTimeImmutable $updatedAt;
 
+
+    public function __construct(Account $account)
+    {
+        $this->id = $account->getId();
+        $this->userId = $account->getUserId();
+        $this->userEmail = $account->getUserEmail();
+        $this->name = $account->getName();
+        $this->description = $account->getDescription();
+        $this->status = $account->getStatus();
+        $this->createdAt = $account->getCreatedAt();
+        $this->updatedAt = $account->getUpdatedAt();
+    }
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'user_id' => $this->userId,
+            'user_email' => $this->userEmail,
+            'name' => $this->name,
+            'description' => $this->description,
+            'status' => $this->status,
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updatedAt->format('Y-m-d H:i:s'),
+        ];
+    }
 }
