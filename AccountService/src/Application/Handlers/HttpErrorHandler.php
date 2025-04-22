@@ -31,6 +31,7 @@ class HttpErrorHandler extends SlimErrorHandler
             'An internal error has occurred while processing your request.'
         );
 
+        
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();
             $error->setDescription($exception->getMessage());
@@ -55,8 +56,18 @@ class HttpErrorHandler extends SlimErrorHandler
             && $exception instanceof Throwable
             && $this->displayErrorDetails
         ) {
-            $error->setDescription($exception->getMessage());
+
+            if($exception instanceof \DomainException) {
+                $error->setType("ENTITY_NOT_FOUND");
+                $error->setDescription($exception->getMessage());
+                $statusCode = 400;
+            }else {
+                $error->setDescription($exception->getMessage());
+            }
+            
+            
         }
+        
 
         $payload = new ActionPayload($statusCode, null, $error);
         $encodedPayload = json_encode($payload, JSON_PRETTY_PRINT);

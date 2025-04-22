@@ -32,10 +32,10 @@ COPY apache/supervisord.conf /etc/supervisord.conf
 # Permissões
 RUN chown -R www-data:www-data /var/www/html
 
-RUN chmod -R 755 /var/www/html
-RUN chown -R 755 /var/www/html/
-RUN chmod -R 755 /var/www/html/logs
-RUN chown -R 755 /var/www/html/logs
+RUN chmod -R 777 /var/www/html/
+RUN chown -R 777 /var/www/html/
+RUN chmod -R 777 /var/www/html/logs/
+RUN chown -R 777 /var/www/html/logs/
 
 
 RUN sed -i 's/80/8081/g' /etc/apache2/ports.conf

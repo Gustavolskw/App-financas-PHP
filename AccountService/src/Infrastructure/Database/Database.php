@@ -21,7 +21,7 @@ abstract class Database
     private function connect(): void
     {
         try {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
             $dotenv->safeLoad();
 
             $host = $_ENV['DB_HOST'] ?? 'localhost';

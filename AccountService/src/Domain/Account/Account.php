@@ -117,12 +117,13 @@ class Account
 
     public function toString():string
     {
+        $status = $this->status ? 'active' : 'inactive';
         return "Account [id={$this->id},\n
          userId={$this->userId},\n
          userEmail={$this->userEmail},\n 
          name={$this->name},\n
          description={$this->description},\n
-         status={$this->status},\n
+         status={$status},\n
          createdAt={$this->createdAt?->format('Y-m-d H:i:s')},\n
          updatedAt={$this->updatedAt?->format('Y-m-d H:i:s')}]";
     }

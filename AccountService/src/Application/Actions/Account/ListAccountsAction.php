@@ -2,10 +2,10 @@
 
 namespace App\Application\Actions\Account;
 
+use App\Application\Actions\ActionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use Monolog\Logger;
 
-class ListAccountsAction extends AccountAction
+class ListAccountsAction extends AccountAction implements ActionInterface
 {
 
     /**
@@ -16,12 +16,12 @@ class ListAccountsAction extends AccountAction
         $body = $this->getFormData();
 
         $this->logger->debug('ListAccountsAction: ' . json_encode($body));
-        //exit;
+        
 
+        $accounts = $this->accountHandler->getAllAccounts();
 
+        $this->logger->debug('Accounts Found on List Action'. json_encode($accounts));
 
-        //$accounts = $this->accountHandler->getAllAccounts();
-
-        return $this->respondWithData($body);
+        return $this->respondWithData($accounts);
     }
 }
