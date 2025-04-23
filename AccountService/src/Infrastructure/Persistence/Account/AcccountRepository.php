@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Account;
 use App\Domain\Account\Account;
 use App\Infrastructure\Persistence\PersistenceRepository;
 use DateTimeImmutable;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -19,23 +20,14 @@ class AcccountRepository extends PersistenceRepository
 
         if($result){
             return array_map(function ($item) {
-                return new Account(
-                    $item['id'] ?? null,
-                    $item['user_id'] ?? null,
-                    $item['user_email'] ?? null,
-                    $item['name'] ?? null,
-                    $item['description'] ?? null,
-                    $item['status'] ?? null,
-                    new DateTimeImmutable($item['created_at']),
-                    new DateTimeImmutable($item['updated_at']),
-                );
+                return $this->buildAccount($item);
             }, $result);
         }
         return null;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function findById($id):?Account
     {
@@ -46,16 +38,7 @@ class AcccountRepository extends PersistenceRepository
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($result){
-            return new Account(
-                $result['id'] ?? null,
-                $result['user_id'] ?? null,
-                $result['user_email'] ?? null,
-                $result['name'] ?? null,
-                $result['description'] ?? null,
-                $result['status'] ?? null,
-                new DateTimeImmutable($result['created_at']),
-                new DateTimeImmutable($result['updated_at']),
-            );
+            return $this->buildAccount($result);
         }
         return null;
 
@@ -73,27 +56,23 @@ class AcccountRepository extends PersistenceRepository
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if($result){
-            return array_map(function ($item) {
-                return new Account(
-                    $item['id'] ?? null,
-                    $item['user_id'] ?? null,
-                    $item['user_email'] ?? null,
-                    $item['name'] ?? null,
-                    $item['description'] ?? null,
-                    $item['status'] ?? null,
-                    new DateTimeImmutable($item['created_at']),
-                    new DateTimeImmutable($item['updated_at']),
-                );
+            return array_map(/**
+             * @throws \Exception
+             */ function ($item) {
+                return $this->buildAccount($item);
             }, $result);
         }
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     public function createAccount(Account $account) : ?Account
     {
-        $stmt = $this->getConnection()->prepare('INSERT INTO accounts (user_id, user_email, name, description, status) VALUES (:user_id, :user_email, :name, :description, :status)');
-        $stmt->bindValue(':user_id', $account->getUserId(), PDO::PARAM_INT);
-        $stmt->bindValue(':user_email', $account->getUserEmail(), PDO::PARAM_STR);
+        $stmt = $this->getConnection()->prepare('INSERT INTO accounts (userId, userEmail, name, description, status) VALUES (:userId, :userEmail, :name, :description, :status)');
+        $stmt->bindValue(':userId', $account->getUserId(), PDO::PARAM_INT);
+        $stmt->bindValue(':userEmail', $account->getUserEmail(), PDO::PARAM_STR);
         $stmt->bindValue(':name', $account->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':description', $account->getDescription(), PDO::PARAM_STR);
         $stmt->bindValue(':status', $account->getStatus(), PDO::PARAM_STR);
@@ -103,15 +82,36 @@ class AcccountRepository extends PersistenceRepository
         }
         $accountId = $this->getConnection()->lastInsertId();
 
+      
+
         $stmt = $this->getConnection()->prepare('SELECT * FROM accounts WHERE id = :id');
         $stmt->bindValue(':id', $accountId, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result ) 
         {
-            return new Account($$result['id'], $result['userId'],$result['userEmail'],  $result['name'], $result['description'], $result['status'], $result['created_at'], $result['updated_at']);
+            return $this->buildAccount($result);
         }
         throw new PDOException('Failed to fetch account after insert: ' . implode(', ', $stmt->errorInfo()));
+    }
+
+    /**
+     * @param mixed $result
+     * @return Account
+     * @throws Exception
+     */
+    public function buildAccount(mixed $result): Account
+    {
+        return new Account(
+            $result['id'] ?? null,
+            $result['userId'] ?? null,
+            $result['userEmail'] ?? null,
+            $result['name'] ?? null,
+            $result['description'] ?? null,
+            $result['status'] ?? null,
+            $result['created_at'] ? new DateTimeImmutable($result['created_at']) : null,
+            $result['updated_at'] ? new DateTimeImmutable($result['updated_at']) : null,
+        );
     }
 
 

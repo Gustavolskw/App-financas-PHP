@@ -8,6 +8,7 @@ use App\Domain\Account\AccountDTO;
 use App\Infrastructure\Persistence\Account\AcccountRepository;
 use DomainException;
 use App\Domain\Account\Account;
+use App\Domain\Account\AccountNotFoundException;
 
 
 class AccountHandler
@@ -18,10 +19,11 @@ class AccountHandler
     {
         $this->accountRepository = $accountRepository;
     }
-    public function getAllAccounts()
+    public function getAllAccounts(): array
     {   
      
         $accounts = $this->accountRepository->findAll();
+
         if ($accounts === null) {
             throw new DomainException("No accounts found tchusss");
         }
@@ -30,35 +32,43 @@ class AccountHandler
             fn($account) => new AccountDTO(
                 $account
             ), $accounts);
-           
-            return $accountsDto;
+    
+            return array_map(fn($dto) => $dto->toArray(), $accountsDto);
 
     }
 
-    public function getAccountById(int $id): array
+    /**
+     * @throws AccountNotFoundException
+     */
+    public function getAccountById(int $id): AccountDTO
     {
-        // Simulate fetching a single account by ID
-        return ['id' => $id, 'name' => 'Account ' . $id];
+       $account = $this->accountRepository->findById($id);
+
+       if ($account === null) {
+        throw new AccountNotFoundException("");
+    }
+
+        return new AccountDTO($account);
     }
 
     public function createAccount(array $data): AccountDTO
     {
         $account = new Account(
             null,
-            $data['user_id'],
-            $data['user_email'],
+            $data['userId'],
+            $data['userEmail'],
             $data['name'],
             $data['description'],
-            $data['status'],
+            true,
             null,
             null
         );
-        $account = $this->accountRepository->createAccount(
+        $accountCreated = $this->accountRepository->createAccount(
             $account
         );
-
+        
         return new AccountDTO(
-            $account
+            $accountCreated
         );
     }
 }

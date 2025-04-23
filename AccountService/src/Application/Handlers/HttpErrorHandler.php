@@ -6,6 +6,9 @@ namespace App\Application\Handlers;
 
 use App\Application\Actions\ActionError;
 use App\Application\Actions\ActionPayload;
+use App\Domain\Account\AccountNotFoundException;
+use DomainException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -57,15 +60,18 @@ class HttpErrorHandler extends SlimErrorHandler
             && $this->displayErrorDetails
         ) {
 
-            if($exception instanceof \DomainException) {
-                $error->setType("ENTITY_NOT_FOUND");
-                $error->setDescription($exception->getMessage());
-                $statusCode = 400;
-            }else {
-                $error->setDescription($exception->getMessage());
-            }
-            
-            
+             if($exception instanceof DomainException) {
+                 $error->setType("ENTITY_NOT_FOUND");
+                 $error->setDescription($exception->getMessage());
+                 $statusCode = 204;
+             }
+             else if ($exception instanceof AccountNotFoundException)
+             {
+                $statusCode = 204;
+             }
+             else {
+                 $error->setDescription($exception->getMessage());
+             }           
         }
         
 

@@ -11,16 +11,11 @@ class ListAccountsAction extends AccountAction implements ActionInterface
     /**
      * @inheritDoc
      */
-    protected function action(): Response
+    public function action(): Response
     {
-        $body = $this->getFormData();
-
-        $this->logger->debug('ListAccountsAction: ' . json_encode($body));
-        
-
         $accounts = $this->accountHandler->getAllAccounts();
 
-        $this->logger->debug('Accounts Found on List Action'. json_encode($accounts));
+        $this->logger->info('Accounts Found on List Action');
 
         return $this->respondWithData($accounts);
     }

@@ -30,10 +30,14 @@ class CreateAccountAction extends AccountAction implements ActionInterface
             }
             $account = $validator->validated();
 
-        $account = $this->accountHandler->createAccount( $account);
+        $accountCreated = $this->accountHandler->createAccount( $account);
+
+        $this->logger->info("Account created successfully");
+
+        //var_dump($accountCreated);
        return $this->respondWithData([
             'message' => 'Create Account Action',
-            $account
+            $accountCreated->toArray()
         ]);
     }
 }
