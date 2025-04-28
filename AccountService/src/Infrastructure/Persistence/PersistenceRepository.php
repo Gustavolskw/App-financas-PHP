@@ -2,19 +2,16 @@
 
 namespace App\Infrastructure\Persistence;
 
-use App\Infrastructure\Database\Database;
 use PDO;
 use Psr\Log\LoggerInterface;
 
-abstract class PersistenceRepository extends Database
+abstract class PersistenceRepository
 {
-    public function __construct(LoggerInterface $logger)
+    protected PDO $pdo;
+    protected LoggerInterface $logger;
+    public function __construct(LoggerInterface $logger, PDO $pdo)
     {
-        parent::__construct($logger);
-    }
-
-    protected function getConnection(): PDO
-    {
-        return $this->getPDO();
+        $this->logger = $logger;
+        $this->pdo = $pdo;
     }
 }

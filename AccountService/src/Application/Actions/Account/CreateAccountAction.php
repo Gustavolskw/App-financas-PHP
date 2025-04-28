@@ -10,7 +10,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 class CreateAccountAction extends AccountAction implements ActionInterface
 {
 
-    public function action(): Response 
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function action(): Response
     {
 
         $body = $this->getFormData();
@@ -23,19 +26,23 @@ class CreateAccountAction extends AccountAction implements ActionInterface
 
             $validator  = $this->validator->make($body, $rules, ValidationMessages::getMessages());
 
-            if($validator->fails()){
-              throw new ValidationException(
-                $validator->errors()->all()
-              );
+        if ($validator->fails()) {
+            $errors = "";
+            foreach ($validator->errors()->all() as $error) {
+                $errors .= $error . "\n";
             }
+            throw new ValidationException(
+                $errors
+            );
+        }
             $account = $validator->validated();
 
-        $accountCreated = $this->accountHandler->createAccount( $account);
+        $accountCreated = $this->accountHandler->createAccount($account);
 
         $this->logger->info("Account created successfully");
 
         //var_dump($accountCreated);
-       return $this->respondWithData([
+        return $this->respondWithData([
             'message' => 'Create Account Action',
             $accountCreated->toArray()
         ]);

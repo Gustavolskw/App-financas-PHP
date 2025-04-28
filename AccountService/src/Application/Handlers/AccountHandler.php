@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Application\Handlers;
 
 use App\Domain\Account\AccountDTO;
-use App\Infrastructure\Persistence\Account\AcccountRepository;
+use App\Infrastructure\Persistence\Account\AccountRepositoryHandler;
+use App\Infrastructure\Persistence\Account\AccountRepositoryInterface;
 use DomainException;
 use App\Domain\Account\Account;
 use App\Domain\Account\AccountNotFoundException;
 
-
-class AccountHandler
+class AccountHandler implements AccountHandlerInterface
 {
 
-    private $accountRepository;
-    public function __construct(AcccountRepository $accountRepository)
+    private AccountRepositoryInterface $accountRepository;
+    public function __construct(AccountRepositoryInterface $accountRepository)
     {
         $this->accountRepository = $accountRepository;
     }
     public function getAllAccounts(): array
-    {   
+    {
      
         $accounts = $this->accountRepository->findAll();
 
@@ -31,10 +31,11 @@ class AccountHandler
         $accountsDto  = array_map(
             fn($account) => new AccountDTO(
                 $account
-            ), $accounts);
+            ),
+            $accounts
+        );
     
             return array_map(fn($dto) => $dto->toArray(), $accountsDto);
-
     }
 
     /**
@@ -42,11 +43,11 @@ class AccountHandler
      */
     public function getAccountById(int $id): AccountDTO
     {
-       $account = $this->accountRepository->findById($id);
+        $account = $this->accountRepository->findById($id);
 
-       if ($account === null) {
-        throw new AccountNotFoundException("");
-    }
+        if ($account === null) {
+            throw new AccountNotFoundException("");
+        }
 
         return new AccountDTO($account);
     }
@@ -70,5 +71,20 @@ class AccountHandler
         return new AccountDTO(
             $accountCreated
         );
+    }
+
+    public function searchAccount($sql, $args = []): ?array
+    {
+        // TODO: Implement searchAccount() method.
+    }
+
+    public function updateAccount(array $data): bool
+    {
+        // TODO: Implement updateAccount() method.
+    }
+
+    public function deleteAccount($id): bool
+    {
+        // TODO: Implement deleteAccount() method.
     }
 }
