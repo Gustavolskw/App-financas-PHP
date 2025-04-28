@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Handlers;
 
 use App\Domain\Account\AccountDTO;
-use App\Infrastructure\Persistence\Account\AccountRepositoryHandler;
 use App\Infrastructure\Persistence\Account\AccountRepositoryInterface;
 use DomainException;
 use App\Domain\Account\Account;

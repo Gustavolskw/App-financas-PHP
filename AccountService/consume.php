@@ -3,15 +3,12 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Acc\Message\CaixaUserCreationQueueConsumer;
-use Acc\Message\CaixaUserInactivationExchangeConsumer;
-use Acc\Message\CaixaUserReactivationExchangeConsumer;
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-function fork(callable $callback)
+function fork(callable $callback): void
 {
     $pid = pcntl_fork();
     if ($pid == -1) {
