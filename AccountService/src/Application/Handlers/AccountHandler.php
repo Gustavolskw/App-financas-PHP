@@ -51,6 +51,35 @@ class AccountHandler implements AccountHandlerInterface
         return new AccountDTO($account);
     }
 
+
+
+    public function searchAccount($sql, $args = []): ?array
+    {
+        // TODO: Implement searchAccount() method.
+    }
+
+    public function updateAccount(array $data): bool
+    {
+        // TODO: Implement updateAccount() method.
+    }
+
+    public function deleteAccount($id): bool
+    {
+        // TODO: Implement deleteAccount() method.
+    }
+
+    public function createUserFirstAccount(array $data): void
+    {
+
+
+    }
+
+    public function updateUserAccounts($id, $userEmail, bool $typeOfAction): void
+    {
+        // TODO: Implement updateUserAccounts() method.
+    }
+
+
     public function createAccount(array $data): AccountDTO
     {
         $account = new Account(
@@ -66,24 +95,9 @@ class AccountHandler implements AccountHandlerInterface
         $accountCreated = $this->accountRepository->createAccount(
             $account
         );
-        
+
         return new AccountDTO(
             $accountCreated
         );
-    }
-
-    public function searchAccount($sql, $args = []): ?array
-    {
-        // TODO: Implement searchAccount() method.
-    }
-
-    public function updateAccount(array $data): bool
-    {
-        // TODO: Implement updateAccount() method.
-    }
-
-    public function deleteAccount($id): bool
-    {
-        // TODO: Implement deleteAccount() method.
     }
 }

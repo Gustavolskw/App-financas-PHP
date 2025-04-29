@@ -98,6 +98,53 @@ class AccountRepositoryHandler extends PersistenceRepository implements AccountR
         throw new PDOException('Failed to fetch account after insert: ' . implode(', ', $stmt->errorInfo()));
     }
 
+    public function updateAccount(Account $account, int $id): ?Account
+    {
+
+        $sql = 'UPDATE accounts SET userId = :userId, userEmail = :userEmail, name = :name, description = :description, status = :status WHERE id = :id';
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':userId', $account->getUserId(), PDO::PARAM_INT);
+            $stmt->bindValue(':userEmail', $account->getUserEmail(), PDO::PARAM_STR);
+            $stmt->bindValue(':name', $account->getName(), PDO::PARAM_STR);
+            $stmt->bindValue(':description', $account->getDescription(), PDO::PARAM_STR);
+            $stmt->bindValue(':status', $account->getStatus(), PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->pdo->commit();
+
+            return new Account(
+                $id,
+                $account->getUserId(),
+                $account->getUserEmail(),
+                $account->getName(),
+                $account->getDescription(),
+                $account->getStatus(),
+                null,
+                null
+            );
+        } catch (Exception $e) {
+            throw new PDOException("Failed to update account: " . $e->getMessage());
+        }
+    }
+
+    public function deleteAccount(int $id): bool
+    {
+        $sql = 'UPDATE accounts SET status = 0 WHERE id = :id';
+        try {
+            $this->pdo->beginTransaction();
+            $smtp = $this->pdo->prepare($sql);
+            $smtp->bindValue(':id', $id, PDO::PARAM_INT);
+            $smtp->execute();
+
+            return $this->pdo->commit();
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw new PDOException("Failed to delete account ". $e->getMessage());
+        }
+    }
+
     /**
      * @param mixed $result
      * @return Account
@@ -117,13 +164,12 @@ class AccountRepositoryHandler extends PersistenceRepository implements AccountR
         );
     }
 
-    public function updateAccount(Account $account,  int $id): ?Account
+    public function countUserAccounts(int $id): mixed
     {
-
-    }
-
-    public function deleteAccount(int $id): bool
-    {
-
+        $sql = "SELECT COUNT(*) as count FROM accounts WHERE userId = :userId";
+        $smtp = $this->pdo->prepare($sql);
+        $smtp->bindValue(':userId', $id, PDO::PARAM_INT);
+        $smtp->execute();
+        return $smtp->fetch(PDO::FETCH_ASSOC);
     }
 }

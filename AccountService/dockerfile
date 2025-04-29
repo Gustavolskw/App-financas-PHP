@@ -1,6 +1,8 @@
 # Dockerfile
 FROM php:8.2-apache
 
+
+COPY 90-xdebug.ini "${PHP_INI_DIR}/conf.d"
 # Instala extensoes e ferramentas necessarias
 RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip git curl libpq-dev \

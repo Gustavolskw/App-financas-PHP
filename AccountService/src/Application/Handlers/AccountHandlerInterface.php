@@ -17,6 +17,6 @@ interface AccountHandlerInterface
     public function updateAccount(array $data): bool;
 
     public function deleteAccount($id): bool;
-
-
+    public function createUserFirstAccount(array $data): void;
+    public function updateUserAccounts($id, $userEmail, bool $typeOfAction):void;
 }

@@ -22,6 +22,6 @@ abstract class AccountAMQP extends AMQPRepository
     }
 
 //    abstract public function publish(string $exchange, string $message): void;
-      abstract public function handle(?string $exchange, ?string $queue, ?string $message, ?array $payload): void;
+    abstract public function handle(?string $exchange, ?string $queue, ?string $message, ?array $payload): void;
 //    abstract public function consumeFromQueue(string $queue): void;
 }

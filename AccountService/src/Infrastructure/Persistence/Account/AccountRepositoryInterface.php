@@ -12,6 +12,8 @@ interface AccountRepositoryInterface
 
     public function searchedQuery($sql, $args = []): ?array;
 
+    public function countUserAccounts(int $id):mixed;
+
     public function createAccount(Account $account): ?Account;
 
     public function updateAccount(Account $account, int $id): ?Account;
