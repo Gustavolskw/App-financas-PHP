@@ -9,9 +9,7 @@
             "stopOnEntry": false,
             "pathMappings": {
                 "/var/www/html": "${workspaceRoot}"
-            },
-            "preLaunchTask": "enable:xdebug",
-            "postDebugTask": "disable:xdebug"
+            }
         },
         {
             "name": "Launch currently open script",

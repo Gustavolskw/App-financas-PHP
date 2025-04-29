@@ -164,12 +164,44 @@ class AccountRepositoryHandler extends PersistenceRepository implements AccountR
         );
     }
 
-    public function countUserAccounts(int $id): mixed
+    public function countUserAccounts(int $userId): mixed
     {
         $sql = "SELECT COUNT(*) as count FROM accounts WHERE userId = :userId";
         $smtp = $this->pdo->prepare($sql);
-        $smtp->bindValue(':userId', $id, PDO::PARAM_INT);
+        $smtp->bindValue(':userId', $userId, PDO::PARAM_INT);
         $smtp->execute();
         return $smtp->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteAccountsByUserId(int $userId, string $userEmail): bool
+    {
+        $sql = 'UPDATE accounts SET status = false WHERE userId = :userId AND userEmail = :userEmail';
+        try{
+            $this->pdo->beginTransaction();
+            $smtp = $this->pdo->prepare($sql);
+            $smtp->bindValue(':userId', $userId, PDO::PARAM_INT);
+            $smtp->bindValue(':userEmail', $userEmail);
+            $smtp->execute();
+            return $this->pdo->commit();
+
+
+        }catch (Exception $e){
+            $this->pdo->rollBack();
+            throw new PDOException("Failed to delete accounts by user id: " . $e->getMessage());
+        }
+    }
+
+    public function veirifAccount(int $id): bool
+    {
+        $sql = 'SELECT EXISTS (SELECT 1 FROM ACCOUNT_SERVICE.accounts WHERE id = :id) as existe;';
+        try{
+            $smtp = $this->pdo->prepare($sql);
+            $smtp->bindValue(':id', $id, PDO::PARAM_INT);
+            $smtp->execute();
+            $result = $smtp->fetch(PDO::FETCH_ASSOC);
+            return $result['existe'];
+        }catch (Exception $e){
+            throw new PDOException("Failed to delete accounts by id: " . $e->getMessage());
+        }
     }
 }
