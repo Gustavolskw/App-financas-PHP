@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Account;
-use Exception;
+namespace App\Domain\Exception;
 
+use Exception;
 
 class AccountNotFoundException extends Exception
 {

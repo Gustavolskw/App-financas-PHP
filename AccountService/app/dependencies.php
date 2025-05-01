@@ -3,15 +3,14 @@
 declare(strict_types=1);
 
 use App\Application\Handlers\AccountHandler;
-use App\Application\Handlers\AccountHandlerInterface;
 use App\Application\Settings\SettingsInterface;
-use App\Infrastructure\Persistence\Account\AccountRepositoryHandler;
-use App\Infrastructure\Persistence\Account\AccountRepositoryInterface;
+use App\Domain\Interfaces\AccountHandlerInterface;
+use App\Domain\Interfaces\AccountRepository;
+use App\Infrastructure\Persistence\Account\PdoAccountRepository;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
-
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Psr\Container\ContainerInterface;
@@ -86,7 +85,7 @@ return function (ContainerBuilder $containerBuilder) {
 
     ]);
     $containerBuilder->addDefinitions([
-        AccountRepositoryInterface::class => DI\autowire(AccountRepositoryHandler::class),
+        AccountRepository::class => DI\autowire(PdoAccountRepository::class),
         AccountHandlerInterface::class => DI\autowire(AccountHandler::class),
 
     ]);

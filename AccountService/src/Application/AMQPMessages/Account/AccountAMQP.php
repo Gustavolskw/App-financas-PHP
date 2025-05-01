@@ -2,7 +2,7 @@
 
 namespace App\Application\AMQPMessages\Account;
 
-use App\Application\Handlers\AccountHandlerInterface;
+use App\Domain\Interfaces\AccountHandlerInterface;
 use App\Infrastructure\AMQP\AMQPRepository;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;

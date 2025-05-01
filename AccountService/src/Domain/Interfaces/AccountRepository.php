@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Infrastructure\Persistence\Account;
+namespace App\Domain\Interfaces;
 
-use App\Domain\Account\Account;
+use App\Domain\Entity\Account;
 
-interface AccountRepositoryInterface
+interface AccountRepository extends RepositoryInterface
 {
     public function findAll(): ?array;
 
