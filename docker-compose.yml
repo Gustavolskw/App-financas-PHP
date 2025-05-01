@@ -79,6 +79,8 @@ services:
       context: ./AccountService
       dockerfile: Dockerfile
     container_name: account-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8081:8081"
     volumes:
