@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Account;
+namespace App\Domain\DTO;
 
-use App\Domain\Account\Account;
+use App\Domain\Entity\Account;
 use DateTimeImmutable;
 
 class AccountDTO

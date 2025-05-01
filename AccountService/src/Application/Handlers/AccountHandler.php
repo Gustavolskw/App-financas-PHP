@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers;
 
-use App\Domain\Account\AccountDTO;
-use App\Infrastructure\Persistence\Account\AccountRepositoryInterface;
+use App\Domain\Entity\Account;
+use App\Domain\DTO\AccountDTO;
+use App\Domain\Exception\AccountNotFoundException;
+use App\Domain\Interfaces\AccountHandlerInterface;
+use App\Domain\Interfaces\AccountRepository;
 use DomainException;
-use App\Domain\Account\Account;
-use App\Domain\Account\AccountNotFoundException;
 
 class AccountHandler implements AccountHandlerInterface
 {
 
-    private AccountRepositoryInterface $accountRepository;
-    public function __construct(AccountRepositoryInterface $accountRepository)
+    private AccountRepository $accountRepository;
+    public function __construct(AccountRepository $accountRepository)
     {
         $this->accountRepository = $accountRepository;
     }

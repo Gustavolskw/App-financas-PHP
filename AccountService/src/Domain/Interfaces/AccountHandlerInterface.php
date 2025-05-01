@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\Handlers;
+namespace App\Domain\Interfaces;
 
-use App\Domain\Account\AccountDTO;
+use App\Domain\DTO\AccountDTO;
 
 interface AccountHandlerInterface
 {

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\Account\ListAccountsAction;
 use App\Application\Actions\Account\ViewAccountAction;
 use App\Application\Actions\Account\CreateAccountAction;
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
+use App\Application\Controller\Account\AccountController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -29,9 +30,9 @@ return function (App $app) {
     });
 
 
-    $app->group("/accounts", function(Group $group){
-        $group->get("", ListAccountsAction::class);
-        $group->get("/{id}", ViewAccountAction::class);
-        $group->post("", CreateAccountAction::class);
+    $app->group("/accounts", function (RouteCollectorProxy $group) {
+        $group->get("", AccountController::class . ":getAllAccounts");
+        //$group->get("/{id}", ViewAccountAction::class);
+        //$group->post("", CreateAccountAction::class);
     });
 };

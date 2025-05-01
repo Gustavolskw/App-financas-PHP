@@ -3,7 +3,7 @@
 namespace App\Application\Actions\Account;
 
 use App\Application\Actions\Action;
-use App\Application\Handlers\AccountHandlerInterface;
+use App\Domain\Interfaces\AccountHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class AccountAction extends Action

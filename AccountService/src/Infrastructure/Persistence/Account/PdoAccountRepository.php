@@ -2,14 +2,15 @@
 
 namespace App\Infrastructure\Persistence\Account;
 
-use App\Domain\Account\Account;
+use App\Domain\Entity\Account;
+use App\Domain\Interfaces\AccountRepository;
 use App\Infrastructure\Persistence\PersistenceRepository;
 use DateTimeImmutable;
 use Exception;
 use PDO;
 use PDOException;
 
-class AccountRepositoryHandler extends PersistenceRepository implements AccountRepositoryInterface
+class PdoAccountRepository extends PersistenceRepository implements AccountRepository
 {
     public function findAll(): ?array
     {
