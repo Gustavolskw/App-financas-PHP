@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Application\Handlers;
 
-namespace App\Application\Actions;
-
+use App\Application\Handlers\ErrorHandler;
 use JsonSerializable;
 
-class ActionPayload implements JsonSerializable
+class PayloadHandler implements JsonSerializable
 {
     private int $statusCode;
 
@@ -15,12 +14,12 @@ class ActionPayload implements JsonSerializable
      */
     private $data;
 
-    private ?ActionError $error;
+    private ?ErrorHandler $error;
 
     public function __construct(
         int $statusCode = 200,
-        $data = null,
-        ?ActionError $error = null
+            $data = null,
+        ?ErrorHandler $error = null
     ) {
         $this->statusCode = $statusCode;
         $this->data = $data;
@@ -40,7 +39,7 @@ class ActionPayload implements JsonSerializable
         return $this->data;
     }
 
-    public function getError(): ?ActionError
+    public function getError(): ?ErrorHandler
     {
         return $this->error;
     }

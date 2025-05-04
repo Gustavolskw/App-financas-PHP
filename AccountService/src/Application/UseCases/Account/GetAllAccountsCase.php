@@ -4,6 +4,7 @@ namespace App\Application\UseCases\Account;
 
 use App\Application\UseCases\UseCaseService;
 use App\Domain\DTO\AccountDTO;
+use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Interfaces\AccountRepository;
 use App\Infrastructure\Persistence\Account\PdoAccountRepository;
 use DomainException;
@@ -23,11 +24,11 @@ class GetAllAccountsCase extends UseCaseService
         $accounts = $this->accountRepository->findAll();
 
         if ($accounts === null) {
-            throw new DomainException("No accounts found tchusss");
+            throw new ResourceNotFoundException("No accounts found tchusss");
         }
 
         $accountsDto  = array_map(
-            fn($account) => new AccountDTO(
+            static fn($account) => new AccountDTO(
                 $account
             ),
             $accounts

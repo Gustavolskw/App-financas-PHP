@@ -2,7 +2,7 @@
 
 namespace App\Application\Controller;
 
-use App\Application\Actions\ActionPayload;
+use App\Application\Handlers\PayloadHandler;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as ValidationFactory;
@@ -42,9 +42,12 @@ abstract class Controller
         return $args[$name];
     }
 
-    protected function respond(ActionPayload $payload, Response $response): Response
+    /**
+     * @throws \JsonException
+     */
+    protected function respond(PayloadHandler $payload, Response $response): Response
     {
-        $json = json_encode($payload, JSON_PRETTY_PRINT);
+        $json = json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $response->getBody()->write($json);
 
         return $response
@@ -52,9 +55,12 @@ abstract class Controller
             ->withStatus($payload->getStatusCode());
     }
 
+    /**
+     * @throws \JsonException
+     */
     protected function respondWithData(Response $response, $data = null, int $statusCode = 200): Response
     {
-        $payload = new ActionPayload($statusCode, $data);
+        $payload = new PayloadHandler($statusCode, $data);
 
         return $this->respond($payload, $response);
     }

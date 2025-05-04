@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers;
 
-use App\Application\Actions\ActionError;
-use App\Application\Actions\ActionPayload;
-use App\Domain\Account\AccountNotFoundException;
+use App\Domain\Exception\ResourceNotFoundException;
 use DomainException;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -22,15 +19,12 @@ use Throwable;
 
 class HttpErrorHandler extends SlimErrorHandler
 {
-    /**
-     * @inheritdoc
-     */
     protected function respond(): Response
     {
         $exception = $this->exception;
         $statusCode = 500;
-        $error = new ActionError(
-            ActionError::SERVER_ERROR,
+        $error = new ErrorHandler(
+            ErrorHandler::SERVER_ERROR,
             'An internal error has occurred while processing your request.'
         );
 
@@ -40,17 +34,17 @@ class HttpErrorHandler extends SlimErrorHandler
             $error->setDescription($exception->getMessage());
 
             if ($exception instanceof HttpNotFoundException) {
-                $error->setType(ActionError::RESOURCE_NOT_FOUND);
+                $error->setType(ErrorHandler::RESOURCE_NOT_FOUND);
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
-                $error->setType(ActionError::NOT_ALLOWED);
+                $error->setType(ErrorHandler::NOT_ALLOWED);
             } elseif ($exception instanceof HttpUnauthorizedException) {
-                $error->setType(ActionError::UNAUTHENTICATED);
+                $error->setType(ErrorHandler::UNAUTHENTICATED);
             } elseif ($exception instanceof HttpForbiddenException) {
-                $error->setType(ActionError::INSUFFICIENT_PRIVILEGES);
+                $error->setType(ErrorHandler::INSUFFICIENT_PRIVILEGES);
             } elseif ($exception instanceof HttpBadRequestException) {
-                $error->setType(ActionError::BAD_REQUEST);
+                $error->setType(ErrorHandler::BAD_REQUEST);
             } elseif ($exception instanceof HttpNotImplementedException) {
-                $error->setType(ActionError::NOT_IMPLEMENTED);
+                $error->setType(ErrorHandler::NOT_IMPLEMENTED);
             }
         }
 
@@ -61,22 +55,20 @@ class HttpErrorHandler extends SlimErrorHandler
         ) {
 
              if($exception instanceof DomainException) {
-                 $error->setType("ENTITY_NOT_FOUND");
+                 $error->setType("DOMAIN_EXCEPTION");
                  $error->setDescription($exception->getMessage());
-                 $statusCode = 204;
+                 $statusCode = 400;
              }
-             else if ($exception instanceof AccountNotFoundException)
-             {
+             else if ($exception instanceof ResourceNotFoundException){
                 $statusCode = 204;
              }
              else {
                  $error->setDescription($exception->getMessage());
              }           
         }
-        
 
-        $payload = new ActionPayload($statusCode, null, $error);
-        $encodedPayload = json_encode($payload, JSON_PRETTY_PRINT);
+        $payload = new PayloadHandler($statusCode, null, $error);
+        $encodedPayload = json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 
         $response = $this->responseFactory->createResponse($statusCode);
         $response->getBody()->write($encodedPayload);

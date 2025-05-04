@@ -33,6 +33,6 @@ return function (App $app) {
     $app->group("/accounts", function (RouteCollectorProxy $group) {
         $group->get("", AccountController::class . ":getAllAccounts");
         //$group->get("/{id}", ViewAccountAction::class);
-        //$group->post("", CreateAccountAction::class);
+        $group->post("", AccountController::class . ":createAccount");
     });
 };
