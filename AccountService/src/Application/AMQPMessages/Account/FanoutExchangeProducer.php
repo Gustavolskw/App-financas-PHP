@@ -2,12 +2,25 @@
 
 namespace App\Application\AMQPMessages\Account;
 
+use App\Domain\Interfaces\AccountRepository;
+use App\Infrastructure\AMQP\AMQPRepository;
 use JsonException;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
 
-class FanoutExchangeProducer extends AccountAMQP
+class FanoutExchangeProducer extends AMQPRepository
 {
 
+    protected AccountRepository $accountRepository;
+    public function __construct(
+        AccountRepository $accountRepository,
+        LoggerInterface $logger,
+        AMQPStreamConnection $connection,
+    ) {
+        parent::__construct($logger, $connection);
+        $this->$accountRepository = $accountRepository;
+    }
     /**
      * @throws JsonException
      */

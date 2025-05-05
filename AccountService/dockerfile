@@ -31,21 +31,23 @@ RUN a2enmod rewrite
 
 # Copia arquivos
 COPY . /var/www/html
-COPY apache/supervisord.conf /etc/supervisord.conf
 
 # Permissões
 RUN chown -R www-data:www-data /var/www/html
 
-RUN chmod -R 777 /var/www/html/
-RUN chown -R 777 /var/www/html/
-RUN chmod -R 777 /var/www/html/logs/
-RUN chown -R 777 /var/www/html/logs/
-
+RUN mkdir -p /var/www/html/logs \
+ && chown -R www-data:www-data /var/www/html/logs \
+ && chmod -R 775 /var/www/html/logs
 
 RUN sed -i 's/80/8081/g' /etc/apache2/ports.conf
 RUN sed -i 's/:80>/:8081>/g' /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 8081
 
-# Define entrypoint
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Copia o script de entrada para o container
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Define o entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+

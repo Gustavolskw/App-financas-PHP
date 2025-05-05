@@ -2,70 +2,46 @@
 
 declare(strict_types=1);
 
-use App\Application\Handlers\AccountHandler;
+use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
-use App\Domain\Interfaces\AccountHandlerInterface;
 use App\Domain\Interfaces\AccountRepository;
 use App\Infrastructure\Persistence\Account\PdoAccountRepository;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
+        SettingsInterface::class => function () {
+            return new Settings([
+                'displayErrorDetails' => true,
+                'logError' => true,
+                'logErrorDetails' => true,
+                'logger' => [
+                    'name' => 'app',
+                    'path' => __DIR__ . '/../logs/app.log',
+                    'level' => \Monolog\Logger::DEBUG,
+                ],
+            ]);
+        },
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
-
             $loggerSettings = $settings->get('logger');
+
             $logger = new Logger($loggerSettings['name']);
-
-            $processor = new UidProcessor();
-            $logger->pushProcessor($processor);
-
-            $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
-            $logger->pushHandler($handler);
+            $logger->pushProcessor(new UidProcessor());
+            $logger->pushHandler(new StreamHandler($loggerSettings['path'], $loggerSettings['level']));
 
             return $logger;
         },
-        'amqp' => [
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'vhost' => getenv('RABBITMQ_VHOST'),
-        ],
-
-        AMQPStreamConnection::class => function (ContainerInterface $c) {
-            // Retrieve RabbitMQ connection settings
-            $config = $c->get('amqp');
-
-            // Create and return AMQPStreamConnection with the configuration
-            return new AMQPStreamConnection(
-                $config['host'],
-                $config['port'],
-                $config['user'],
-                $config['password'],
-                $config['vhost']
-            );
-        },
-
-        AMQPChannel::class => function (ContainerInterface $c) {
-            // Get the AMQPStreamConnection instance and create a channel
-            return $c->get(AMQPStreamConnection::class)->channel();
-        },
-        // Add PDO configuration
         PDO::class => function (ContainerInterface $c) {
             $dbConfig = $c->get('db');
             $dsn = "{$dbConfig['driver']}:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}";
             return new PDO($dsn, $dbConfig['username'], $dbConfig['password'], $dbConfig['flag']);
         },
-
-        // Add Database Settings
         'db' => [
             'driver' => getenv('DB_DRIVER'),
             'host' => getenv('DB_HOST'),
@@ -81,12 +57,6 @@ return function (ContainerBuilder $containerBuilder) {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ],
         ],
-
-
-    ]);
-    $containerBuilder->addDefinitions([
         AccountRepository::class => DI\autowire(PdoAccountRepository::class),
-        AccountHandlerInterface::class => DI\autowire(AccountHandler::class),
-
     ]);
 };

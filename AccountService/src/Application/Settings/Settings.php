@@ -10,7 +10,13 @@ class Settings implements SettingsInterface
 
     public function __construct(array $settings)
     {
-        $this->settings = $settings;
+        // Define valores padrão para evitar erros de chave ausente
+        $defaults = [
+            'displayErrorDetails' => true,
+            'logError' => true,
+            'logErrorDetails' => true,
+        ];
+        $this->settings = array_merge($defaults, $settings);
     }
 
     /**

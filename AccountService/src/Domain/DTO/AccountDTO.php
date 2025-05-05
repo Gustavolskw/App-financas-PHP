@@ -32,8 +32,8 @@ class AccountDTO
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->userId,
-            'user_email' => $this->userEmail,
+            'userId' => $this->userId,
+            'userEmail' => $this->userEmail,
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,

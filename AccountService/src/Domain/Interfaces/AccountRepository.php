@@ -23,5 +23,6 @@ interface AccountRepository extends RepositoryInterface
     public function deleteAccountsByUserId(int $userId, string $userEmail): bool;
 
     public function veirifAccount(int $id): bool;
+    public function updateUserAccountsStatus(int $userId, bool $status):void;
 
 }

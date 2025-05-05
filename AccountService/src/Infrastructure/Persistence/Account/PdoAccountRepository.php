@@ -205,4 +205,20 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
             throw new PDOException("Failed to delete accounts by id: " . $e->getMessage());
         }
     }
+
+    public function updateUserAccountsStatus(int $userId, bool $status):void
+    {
+        $sql = "UPDATE accounts SET status = :status WHERE userId = :userId";
+        try{
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':status', $status, PDO::PARAM_BOOL);
+            $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+        }catch (Exception $e){
+            $this->pdo->rollBack();
+            throw new PDOException("Failed to update user accounts status: " . $e->getMessage());
+        }
+    }
 }

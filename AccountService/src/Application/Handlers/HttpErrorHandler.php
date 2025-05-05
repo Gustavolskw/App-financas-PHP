@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers;
 
+use App\Domain\Exception\InvalidUserException;
 use App\Domain\Exception\ResourceNotFoundException;
 use DomainException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -61,6 +62,12 @@ class HttpErrorHandler extends SlimErrorHandler
              }
              else if ($exception instanceof ResourceNotFoundException){
                 $statusCode = 204;
+             }
+             else if ($exception instanceof InvalidUserException)
+             {
+                 $error->setType("AUTH_USER_EXCEPTION");
+                 $error->setDescription($exception->getMessage());
+                 $statusCode = 400;
              }
              else {
                  $error->setDescription($exception->getMessage());

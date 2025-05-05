@@ -9,13 +9,11 @@ use Psr\Log\LoggerInterface;
 abstract class AMQPRepository
 {
     protected AMQPStreamConnection $connection;
-    protected AMQPChannel $channel;
     protected LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger, AMQPStreamConnection $connection, AMQPChannel $channel)
+    public function __construct(LoggerInterface $logger, AMQPStreamConnection $connection)
     {
         $this->logger = $logger;
         $this->connection = $connection;
-        $this->channel = $channel;
     }
 }
