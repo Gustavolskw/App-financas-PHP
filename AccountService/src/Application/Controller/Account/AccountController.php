@@ -5,10 +5,13 @@ namespace App\Application\Controller\Account;
 use App\Application\Controller\Controller;
 use App\Application\UseCases\Account\CreateAccountCase;
 use App\Application\UseCases\Account\GetAllAccountsCase;
+use App\Application\UseCases\Account\UpdateAccountCase;
+use App\Domain\Exception\InvalidUserException;
 use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Interfaces\AccountRepository;
 use App\Infrastructure\Validation\ValidationMessages;
 use Dotenv\Exception\ValidationException;
+use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -86,5 +89,32 @@ class AccountController extends Controller
         $getAccountCase = new GetAllAccountsCase($this->logger, $this->accountRepository);
         $account = $getAccountCase->execute($validatedId);
         return $this->respondWithData($response, $account);
+    }
+
+
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws JsonException
+     */
+    public function updateAccountData(Request $request, Response $response, array $args)
+    {
+     $body = $this->getFormData($request);
+        $accountId = $this->resolveArg("id", $request, $args);
+        $body += $accountId;
+        $rules  = [
+            'id' => 'required|integer',
+            'name' => 'string',
+            'description' => 'string',
+        ];
+        $validator  = $this->validator->make($body, $rules, ValidationMessages::getMessages());
+
+        if($validator->fails())
+        {
+            throw new ValidationException($validator->errors());
+        }
+        $validatedData = $validator->validated();
+        $updateAccountCase = new UpdateAccountCase($this->logger, $this->accountRepository);
+        $accountDTOUpdated = $updateAccountCase->execute($validatedData, $accountId );
+        return $this->respondWithData($response, $accountDTOUpdated->toArray(), 200);
     }
 }

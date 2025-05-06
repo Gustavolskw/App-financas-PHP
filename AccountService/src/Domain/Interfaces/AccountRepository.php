@@ -14,7 +14,7 @@ interface AccountRepository extends RepositoryInterface
 
     public function countUserAccounts(int $userId):mixed;
 
-    public function createAccount(Account $account): ?Account;
+    public function save(Account $account): ?Account;
 
     public function updateAccount(Account $account, int $id): ?Account;
 

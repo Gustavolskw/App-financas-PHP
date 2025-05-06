@@ -41,7 +41,7 @@ class CreateAccountCase extends UseCaseService
                 null,
                 null );
 
-            $account = $this->accountRepository->createAccount($newAccount);
+            $account = $this->accountRepository->save($newAccount);
 
         }catch (Exception $exception){
             if($exception instanceof InvalidUserException)

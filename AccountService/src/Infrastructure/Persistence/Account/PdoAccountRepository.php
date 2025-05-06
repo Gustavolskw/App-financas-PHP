@@ -72,7 +72,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
     /**
      * @throws Exception
      */
-    public function createAccount(Account $account) : ?Account
+    public function save(Account $account) : ?Account
     {
         $sql = 'INSERT INTO accounts (userId, userEmail, name, description, status) VALUES (:userId, :userEmail, :name, :description, :status)';
         $stmt = $this->pdo->prepare($sql);
@@ -102,14 +102,11 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
     public function updateAccount(Account $account, int $id): ?Account
     {
 
-        $sql = 'UPDATE accounts SET userId = :userId, userEmail = :userEmail, name = :name, description = :description, status = :status WHERE id = :id';
+        $sql = 'UPDATE accounts SET name = :name, description = :description WHERE id = :id';
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':userId', $account->getUserId(), PDO::PARAM_INT);
-            $stmt->bindValue(':userEmail', $account->getUserEmail(), PDO::PARAM_STR);
             $stmt->bindValue(':name', $account->getName(), PDO::PARAM_STR);
             $stmt->bindValue(':description', $account->getDescription(), PDO::PARAM_STR);
-            $stmt->bindValue(':status', $account->getStatus(), PDO::PARAM_STR);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 

@@ -34,5 +34,6 @@ return function (App $app) {
         $group->get("", AccountController::class . ":getAllAccounts");
         //$group->get("/{id}", ViewAccountAction::class);
         $group->post("", AccountController::class . ":createAccount");
+        $group->patch("/{id}", AccountController::class . ":updateAccount");
     });
 };
