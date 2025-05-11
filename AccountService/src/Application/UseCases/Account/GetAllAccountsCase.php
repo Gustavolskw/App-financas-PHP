@@ -18,13 +18,17 @@ class GetAllAccountsCase extends UseCaseService
     ) {
         parent::__construct($logger, $accountRepository);
     }
+
+    /**
+     * @throws ResourceNotFoundException
+     */
     public function execute(): ?array
     {
         $this->logger->info("Get all accounts");
         $accounts = $this->accountRepository->findAll();
 
         if ($accounts === null) {
-            throw new ResourceNotFoundException("No accounts found tchusss");
+            throw new ResourceNotFoundException("No accounts");
         }
 
         $accountsDto  = array_map(
@@ -34,7 +38,7 @@ class GetAllAccountsCase extends UseCaseService
             $accounts
         );
 
-        return array_map(fn($dto) => $dto->toArray(), $accountsDto);
+        return array_map(static fn($dto) => $dto->toArray(), $accountsDto);
     }
 
 

@@ -104,6 +104,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
 
         $sql = 'UPDATE accounts SET name = :name, description = :description WHERE id = :id';
         try {
+            $this->pdo->beginTransaction();
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':name', $account->getName(), PDO::PARAM_STR);
             $stmt->bindValue(':description', $account->getDescription(), PDO::PARAM_STR);

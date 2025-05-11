@@ -62,7 +62,7 @@ class CreateAccountCase extends UseCaseService
      * @throws InvalidUserException
      * @throws JsonException
      */
-    private function verifyUser(int $userId, string $userEmail): void
+    public function verifyUser(int $userId, string $userEmail): void
     {
         $client = new Client();
         $response = $client->request("GET", "http://nginx/auth/user/verify/$userId", [

@@ -21,6 +21,7 @@ class AccountController extends Controller
 {
     private AccountRepository $accountRepository;
     private LoggerInterface $logger;
+
     public function __construct(LoggerInterface $logger, AccountRepository $accountRepository)
     {
         $this->accountRepository = $accountRepository;
@@ -44,7 +45,8 @@ class AccountController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      * @throws JsonException
      */
-    public function createAccount(Request $request, Response $response){
+    public function createAccount(Request $request, Response $response)
+    {
         $body = $this->getFormData($request);
         $rules = [
             'userId' => 'required|integer',
@@ -53,7 +55,7 @@ class AccountController extends Controller
             'description' => 'string',
         ];
 
-        $validator  = $this->validator->make($body, $rules, ValidationMessages::getMessages());
+        $validator = $this->validator->make($body, $rules, ValidationMessages::getMessages());
         if ($validator->fails()) {
             $errors = "";
             foreach ($validator->errors()->all() as $error) {
@@ -76,13 +78,12 @@ class AccountController extends Controller
     public function getAccountById(Request $request, Response $response, array $args)
     {
         $accountId = $this->resolveArg("id", $request, $args);
-        $rules  = [
+        $rules = [
             'id' => 'required|integer'
         ];
-        $validator  = $this->validator->make($accountId, $rules, ValidationMessages::getMessages());
+        $validator = $this->validator->make($accountId, $rules, ValidationMessages::getMessages());
 
-        if($validator->fails())
-        {
+        if ($validator->fails()) {
             throw new ValidationException($validator->errors());
         }
         $validatedId = $validator->validated();
@@ -98,23 +99,22 @@ class AccountController extends Controller
      */
     public function updateAccountData(Request $request, Response $response, array $args)
     {
-     $body = $this->getFormData($request);
+        $body = $this->getFormData($request);
         $accountId = $this->resolveArg("id", $request, $args);
-        $body += $accountId;
-        $rules  = [
+        $body += ["id" => $accountId];
+        $rules = [
             'id' => 'required|integer',
             'name' => 'string',
             'description' => 'string',
         ];
-        $validator  = $this->validator->make($body, $rules, ValidationMessages::getMessages());
+        $validator = $this->validator->make($body, $rules, ValidationMessages::getMessages());
 
-        if($validator->fails())
-        {
+        if ($validator->fails()) {
             throw new ValidationException($validator->errors());
         }
         $validatedData = $validator->validated();
         $updateAccountCase = new UpdateAccountCase($this->logger, $this->accountRepository);
-        $accountDTOUpdated = $updateAccountCase->execute($validatedData, $accountId );
+        $accountDTOUpdated = $updateAccountCase->execute($validatedData, $accountId);
         return $this->respondWithData($response, $accountDTOUpdated->toArray(), 200);
     }
 }

@@ -34,11 +34,11 @@ class AccountDTO
             'id' => $this->id,
             'userId' => $this->userId,
             'userEmail' => $this->userEmail,
-            'name' => $this->name,
+            'name' => ["name" => $this->name, "account_owner"=>$this->userEmail],
             'description' => $this->description,
             'status' => $this->status,
-            'created_at' => $this->createdAt ? $this->createdAt->format('Y-m-d H:i:s') : null,
-            'updated_at' => $this->updatedAt ? $this->updatedAt->format('Y-m-d H:i:s') : null,
+            'created_at' => $this->createdAt?->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updatedAt?->format('Y-m-d H:i:s'),
         ];
     }
 }
