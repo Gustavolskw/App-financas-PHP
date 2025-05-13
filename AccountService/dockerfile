@@ -7,9 +7,11 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip git curl libpq-dev \
     supervisor \
-    && docker-php-ext-install zip sockets pdo pdo_mysql \
-    && pecl install xdebug  && docker-php-ext-enable xdebug \
+    && docker-php-ext-install zip sockets pdo pdo_mysql bcmath \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
     && apt-get clean
+
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

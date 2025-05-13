@@ -4,9 +4,6 @@ sleep 6
 echo "executando testes autmatizados"
 vendor/bin/phpunit --testsuite=unit --testdox
 
-
-
-
 # Função para rodar um worker em segundo plano
 start_worker() {
     echo "$(date "+%Y-%m-%d %H:%M:%S") INFO Iniciando worker: $1"

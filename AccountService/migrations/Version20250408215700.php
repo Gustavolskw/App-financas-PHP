@@ -21,8 +21,8 @@ final class Version20250408215700 extends AbstractMigration
     {
         $this->addSql("CREATE TABLE `accounts` (
         `id` bigint NOT NULL AUTO_INCREMENT,
-        `userId` bigint NOT NULL,
-        `userEmail` varchar(255) NOT NULL,
+        `user_id` bigint NOT NULL,
+        `user_email` varchar(255) NOT NULL,
         `name` varchar(80) NOT NULL,
         `description` text NOT NULL,
         `status` tinyint(1) NOT NULL DEFAULT '1',

@@ -14,7 +14,7 @@ class GetAllAccountsCase extends UseCaseService
 {
     public function __construct(
         private readonly LoggerInterface   $logger,
-        private readonly AccountRepository $accountRepository
+         AccountRepository $accountRepository
     ) {
         parent::__construct($logger, $accountRepository);
     }
@@ -25,7 +25,7 @@ class GetAllAccountsCase extends UseCaseService
     public function execute(): ?array
     {
         $this->logger->info("Get all accounts");
-        $accounts = $this->accountRepository->findAll();
+        $accounts = $this->getPdoRepository()->findAll();
 
         if ($accounts === null) {
             throw new ResourceNotFoundException("No accounts");

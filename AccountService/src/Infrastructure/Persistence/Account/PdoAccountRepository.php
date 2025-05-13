@@ -15,8 +15,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
     public function findAll(): ?array
     {
         $sql = 'SELECT * FROM accounts';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
+        $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($result) {
@@ -74,7 +73,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
      */
     public function save(Account $account) : ?Account
     {
-        $sql = 'INSERT INTO accounts (userId, userEmail, name, description, status) VALUES (:userId, :userEmail, :name, :description, :status)';
+        $sql = 'INSERT INTO accounts (user_id, user_email, name, description, status) VALUES (:userId, :userEmail, :name, :description, :status)';
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':userId', $account->getUserId(), PDO::PARAM_INT);
         $stmt->bindValue(':userEmail', $account->getUserEmail(), PDO::PARAM_STR);
@@ -153,8 +152,8 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
     {
         return new Account(
             $result['id'] ?? null,
-            $result['userId'] ?? null,
-            $result['userEmail'] ?? null,
+            $result['user_id'] ?? null,
+            $result['user_email'] ?? null,
             $result['name'] ?? null,
             $result['description'] ?? null,
             $result['status'] ?? null,
@@ -165,7 +164,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
 
     public function countUserAccounts(int $userId): mixed
     {
-        $sql = "SELECT COUNT(*) as count FROM accounts WHERE userId = :userId";
+        $sql = "SELECT COUNT(*) as count FROM accounts WHERE user_id = :userId";
         $smtp = $this->pdo->prepare($sql);
         $smtp->bindValue(':userId', $userId, PDO::PARAM_INT);
         $smtp->execute();
@@ -174,12 +173,12 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
 
     public function deleteAccountsByUserId(int $userId, string $userEmail): bool
     {
-        $sql = 'UPDATE accounts SET status = false WHERE userId = :userId AND userEmail = :userEmail';
+        $sql = 'UPDATE accounts SET status = false WHERE user_id = :userId AND user_email = :userEmail';
         try{
             $this->pdo->beginTransaction();
             $smtp = $this->pdo->prepare($sql);
-            $smtp->bindValue(':userId', $userId, PDO::PARAM_INT);
-            $smtp->bindValue(':userEmail', $userEmail);
+            $smtp->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $smtp->bindValue(':user_email', $userEmail);
             $smtp->execute();
             return $this->pdo->commit();
 
@@ -206,7 +205,7 @@ class PdoAccountRepository extends PersistenceRepository implements AccountRepos
 
     public function updateUserAccountsStatus(int $userId, bool $status):void
     {
-        $sql = "UPDATE accounts SET status = :status WHERE userId = :userId";
+        $sql = "UPDATE accounts SET status = :status WHERE user_id = :userId";
         try{
             $this->pdo->beginTransaction();
             $stmt = $this->pdo->prepare($sql);
