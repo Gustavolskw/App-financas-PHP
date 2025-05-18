@@ -2,13 +2,13 @@
 
 namespace App\Application\UseCases\Account;
 
+use App\Application\Handlers\ServiceHttpHandler;
 use App\Application\UseCases\UseCaseService;
 use App\Domain\DTO\AccountDTO;
 use App\Domain\Entity\Account;
 use App\Domain\Exception\InvalidUserException;
 use App\Domain\Interfaces\AccountRepository;
 use Exception;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -17,7 +17,8 @@ class CreateAccountCase extends UseCaseService
 {
     public function __construct(
         private readonly LoggerInterface   $logger,
-        private readonly AccountRepository $accountRepository
+        private readonly AccountRepository $accountRepository,
+        private readonly ServiceHttpHandler $httpService
     ) {
         parent::__construct($logger, $accountRepository);
     }
@@ -57,24 +58,21 @@ class CreateAccountCase extends UseCaseService
         return new AccountDTO($account);
     }
 
+
     /**
      * @throws GuzzleException
-     * @throws InvalidUserException
      * @throws JsonException
+     * @throws InvalidUserException
      */
     public function verifyUser(int $userId, string $userEmail): void
     {
-        $client = new Client();
-        $response = $client->request("GET", "http://nginx/auth/user/verify/$userId", [
-            'query' => ['email' => $userEmail],
-            'timeout' => 5.0,
+        $response = $this->httpService->handleUserValidationRequest("http://nginx/auth/user/verify/$userId", [
+            'email' => $userEmail
         ]);
-        $json = (string) $response->getBody();
-        $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if(!$data){
-            throw new InvalidUserException("Usuario inválido");
+        $this->logger->info("Response from user verify: " . $response);
+        if(!$response){
+            throw new InvalidUserException("User not found");
         }
-
     }
 
 }

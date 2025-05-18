@@ -3,6 +3,7 @@
 namespace App\Application\Controller\Account;
 
 use App\Application\Controller\Controller;
+use App\Application\Handlers\ServiceHttpHandler;
 use App\Application\UseCases\Account\CreateAccountCase;
 use App\Application\UseCases\Account\GetAllAccountsCase;
 use App\Application\UseCases\Account\UpdateAccountCase;
@@ -65,8 +66,9 @@ class AccountController extends Controller
                 $errors
             );
         }
+        $httpService = new ServiceHttpHandler($this->logger);
         $accountValidatedData = $validator->validated();
-        $createAccountCase = new CreateAccountCase($this->logger, $this->accountRepository);
+        $createAccountCase = new CreateAccountCase($this->logger, $this->accountRepository, $httpService);
         $accountDTOCreated = $createAccountCase->execute($accountValidatedData);
         return $this->respondWithData($response, $accountDTOCreated->toArray(), 201);
     }

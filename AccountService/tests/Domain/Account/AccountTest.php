@@ -18,8 +18,8 @@ class AccountTest extends TestCase
             "Test Case", // name
             "Test Case Development", // description
             true, // status
-            new \DateTimeImmutable('2025-01-01 00:00:00'), // createdAt
-            new \DateTimeImmutable('2025-01-02 00:00:00')  // updatedAt
+            new DateTimeImmutable('2025-01-01 00:00:00'), // createdAt
+            new DateTimeImmutable('2025-01-02 00:00:00')  // updatedAt
         ]
     ];
 }
@@ -35,7 +35,7 @@ class AccountTest extends TestCase
      * @param DateTimeImmutable $createdAt
      * @param DateTimeImmutable $updatedAt
      */
-    public function testCreateAccount(int $id, int $userId, string $userEmail, string $name, string $description, bool $status, \DateTimeImmutable $createdAt,\DateTimeImmutable $updatedAt ):void
+    public function testCreateAccount(int $id, int $userId, string $userEmail, string $name, string $description, bool $status, DateTimeImmutable $createdAt, DateTimeImmutable $updatedAt ):void
     {
         $account = new Account($id, $userId, $userEmail, $name, $description, $status, $createdAt, $updatedAt);
 

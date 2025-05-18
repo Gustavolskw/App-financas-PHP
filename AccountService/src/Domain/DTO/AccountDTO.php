@@ -34,7 +34,7 @@ class AccountDTO
             'id' => $this->id,
             'userId' => $this->userId,
             'userEmail' => $this->userEmail,
-            'name' => ["name" => $this->name, "account_owner"=>$this->userEmail],
+            'name' =>$this->name,
             'description' => $this->description,
             'status' => $this->status,
             'created_at' => $this->createdAt?->format('Y-m-d H:i:s'),
