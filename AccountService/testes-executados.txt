@@ -1,0 +1,8 @@
+Create Account (Application\UseCases\CreateAccount)
+ [ ] Create account with validation
+ [ ] Create account with no validation
+ [ ] Create account with error on validation
+
+Account (Domain\Account\Account)
+ [x] Create account with data set #0
+

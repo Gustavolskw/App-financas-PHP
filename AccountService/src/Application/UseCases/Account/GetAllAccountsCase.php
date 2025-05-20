@@ -14,7 +14,7 @@ class GetAllAccountsCase extends UseCaseService
 {
     public function __construct(
         private readonly LoggerInterface   $logger,
-         AccountRepository $accountRepository
+        AccountRepository $accountRepository
     ) {
         parent::__construct($logger, $accountRepository);
     }
@@ -40,6 +40,4 @@ class GetAllAccountsCase extends UseCaseService
 
         return array_map(static fn($dto) => $dto->toArray(), $accountsDto);
     }
-
-
 }

@@ -34,11 +34,6 @@ class CreateAccountTest extends TestCase
         ];
     }
 
-    public function setUp(): void
-    {
-
-    }
-
     /**
      * @throws Exception
      * @throws InvalidUserException
@@ -128,5 +123,4 @@ class CreateAccountTest extends TestCase
         $this->expectExceptionMessage("User not found");
         $createAccountCase->execute($accountData);
     }
-
 }

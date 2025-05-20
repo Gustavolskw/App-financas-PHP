@@ -22,8 +22,7 @@ class ServiceHttpHandler
      * @throws GuzzleException
      * @throws \JsonException
      */
-    public
-    function handleUserValidationRequest(string $url, $queryParams = [], $headers = []): bool
+    public function handleUserValidationRequest(string $url, $queryParams = [], $headers = []): bool
     {
 
         //"http://nginx/auth/user/verify/$userId"
@@ -33,8 +32,7 @@ class ServiceHttpHandler
             'query' => $queryParams,
             'timeout' => 5.0,
             'headers' => $headers,
-        ],
-        );
+        ],);
         $json = (string)$response->getBody();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         if ($data === null && $response->getStatusCode() !== 204) {
@@ -44,5 +42,4 @@ class ServiceHttpHandler
         $this->logger->info("Response from $url: " . $data);
         return $data;
     }
-
 }

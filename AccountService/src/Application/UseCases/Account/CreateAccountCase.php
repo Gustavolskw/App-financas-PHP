@@ -26,27 +26,27 @@ class CreateAccountCase extends UseCaseService
     /**
      * @throws GuzzleException|InvalidUserException
      */
-    public function execute(array $accountData, bool $isNewAccount = false ): AccountDTO
+    public function execute(array $accountData, bool $isNewAccount = false): AccountDTO
     {
-        try{
-            if(!$isNewAccount){
+        try {
+            if (!$isNewAccount) {
                 $this->verifyUser($accountData["userId"], $accountData["userEmail"]);
             }
             $this->logger->info("Create account". json_encode($accountData, JSON_THROW_ON_ERROR));
-            $newAccount = new Account(null,
+            $newAccount = new Account(
+                null,
                 $accountData["userId"],
                 $accountData["userEmail"] ?? $accountData["email"],
                 $accountData["name"] ?? "Conta Corrente Padrão - " . $accountData["userId"],
                 $accountData["description"]?? "Conta Corrente Padrão para usuario novo!",
                 true,
                 null,
-                null );
+                null
+            );
 
             $account = $this->accountRepository->save($newAccount);
-
-        }catch (Exception $exception){
-            if($exception instanceof InvalidUserException)
-            {
+        } catch (Exception $exception) {
+            if ($exception instanceof InvalidUserException) {
                 throw new InvalidUserException($exception->getMessage());
             }
             throw new \RuntimeException($exception->getMessage());
@@ -70,9 +70,8 @@ class CreateAccountCase extends UseCaseService
             'email' => $userEmail
         ]);
         $this->logger->info("Response from user verify: " . $response);
-        if(!$response){
+        if (!$response) {
             throw new InvalidUserException("User not found");
         }
     }
-
 }
