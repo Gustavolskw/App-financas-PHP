@@ -19,16 +19,15 @@ final class Version20250513133144 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("INSERT INTO `categories` (`id`, `name`) VALUES
-        (1, 'Salario'),
-        (2, 'Transporte'),
-        (3, 'Entreterimento'),
-        (4, 'Saúde'),
-        (5, 'Lazer'),
-        (6, 'Compras'),
-        (7, 'Viagens'),
-        (8, 'Educação'),
-        (9, 'Comida');");
+        $this->addSql("INSERT INTO `categories` (`id`, `name`, `type_category`) VALUES
+        (1, 'Salario', 1),
+        (2, 'Transporte', 0),
+        (3, 'Entreterimento',0),
+        (4, 'Saúde',0),
+        (5, 'Lazer',0),
+        (6, 'Comida',0),
+        (7, 'Viagens',0),
+        (8, 'Educação',0);");
 
     }
 

@@ -22,7 +22,7 @@ final class Version20250513115148 extends AbstractMigration
         $table = $schema->createTable('categories');
         $table->addColumn('id', 'bigint', ['autoincrement' => true]);
         $table->addColumn('name', 'string', ['length' => 45, 'notnull' => true]);
-
+        $table->addColumn('type_category', 'boolean');
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['name'], 'uniq_category_name');
     }
