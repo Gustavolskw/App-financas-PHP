@@ -1,8 +1,0 @@
-Account (Domain\Account\Account)
- [x] Create account with data set #0
-
-Create Account (Application\UseCases\CreateAccount)
- [x] Create account with validation with data set #0
- [x] Create account with no validation with data set #0
- [x] Create account with error on validation with data set #0
-

@@ -2,6 +2,9 @@
 
 namespace App\Domain\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 class Category
 {
     private int $id;
@@ -29,8 +32,8 @@ class Category
         $this->color = $color;
         $this->icon = $icon;
         $this->isActive = $isActive;
-        $this->createdAt = $createdAt ?? new DateTimeInterface();
-        $this->updatedAt = $updatedAt ?? new DateTimeInterface();
+        $this->createdAt = $createdAt ?? new DateTimeImmutable();
+        $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
     }
 
     public function getId(): int

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250513115148 extends AbstractMigration
+final class Version20250601184622 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,8 +20,8 @@ final class Version20250513115148 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('wallets');
-        $table->addColumn('id', 'bigint', ['unsigned' => true, 'autoincrement' => true]);
-        $table->addColumn('user_id', 'bigint', ['unsigned' => true, 'notnull' => true, 'comment' => 'User ID from auth microservice (unique per user)']);
+        $table->addColumn('id', 'bigint', ['autoincrement' => true]);
+        $table->addColumn('user_id', 'bigint', ['notnull' => true, 'comment' => 'User ID from auth microservice (unique per user)']);
         $table->addColumn('user_email', 'string', ['length' => 255, 'notnull' => true, 'comment' => 'User email for dual validation']);
         $table->addColumn('created_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
         $table->addColumn('updated_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
@@ -36,9 +36,6 @@ final class Version20250513115148 extends AbstractMigration
         // Regular indexes
         $table->addIndex(['user_id'], 'idx_user_id');
         $table->addIndex(['user_email'], 'idx_user_email');
-
-        // Add comment to table
-        $table->addOption('comment', 'Single wallet per user with dual validation');
     }
 
     public function down(Schema $schema): void

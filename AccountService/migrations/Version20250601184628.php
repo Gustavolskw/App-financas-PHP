@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250513132337 extends AbstractMigration
+final class Version20250601184628 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,9 +20,9 @@ final class Version20250513132337 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('transactions');
-        $table->addColumn('id', 'bigint', ['unsigned' => true, 'autoincrement' => true]);
-        $table->addColumn('wallet_id', 'bigint', ['unsigned' => true, 'notnull' => true]);
-        $table->addColumn('category_id', 'bigint', ['unsigned' => true, 'notnull' => true]);
+        $table->addColumn('id', 'bigint', ['autoincrement' => true]);
+        $table->addColumn('wallet_id', 'bigint', ['notnull' => true]);
+        $table->addColumn('category_id', 'bigint', ['notnull' => true]);
         $table->addColumn('description', 'string', ['length' => 255, 'notnull' => true]);
         $table->addColumn('amount', 'decimal', ['precision' => 15, 'scale' => 2, 'notnull' => true]);
         $table->addColumn('is_income', 'boolean', ['notnull' => true, 'comment' => 'true for income, false for expense']);
@@ -33,8 +33,8 @@ final class Version20250513132337 extends AbstractMigration
         $table->setPrimaryKey(['id']);
 
         // Foreign keys
-        $table->addForeignKeyConstraint('wallets', ['wallet_id'], ['id'], ['onDelete' => 'RESTRICT']);
-        $table->addForeignKeyConstraint('categories', ['category_id'], ['id'], ['onDelete' => 'RESTRICT']);
+        $table->addForeignKeyConstraint('wallets', ['wallet_id'], ['id'], ['onDelete' => 'CASCADE']);
+        $table->addForeignKeyConstraint('categories', ['category_id'], ['id'], ['onDelete' => 'CASCADE']);
 
         // Indexes
         $table->addIndex(['wallet_id'], 'idx_wallet_id');

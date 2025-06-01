@@ -2,6 +2,9 @@
 
 namespace App\Domain\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 class Wallet
 {
 
@@ -11,13 +14,13 @@ class Wallet
     private DateTimeInterface $createdAt;
     private DateTimeInterface $updatedAt;
 
-    public function __construct(int $id, int $userId, string $userEmail, DateTimeInterface $createdAt, DateTimeInterface $updatedAt)
+    public function __construct(int $id, int $userId, string $userEmail, DateTimeInterface $createdAt = null, DateTimeInterface $updatedAt = null)
     {
         $this->id = $id;
         $this->userId = $userId;
         $this->userEmail = $userEmail;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->createdAt = $createdAt ?? new DateTimeImmutable();
+        $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
     }
     public function getId(): int
     {

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250408215500 extends AbstractMigration
+final class Version20250601184615 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,11 +20,12 @@ final class Version20250408215500 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('icons');
-        $table->addColumn('id', 'bigint', ['unsigned' => true, 'autoincrement' => true]);
+        $table->addColumn('id', 'bigint', ['autoincrement' => true]);
         $table->addColumn('name', 'string', ['length' => 100, 'notnull' => true]);
         $table->addColumn('color', 'string', ['length' => 10, 'notnull' => false, 'comment' => 'Hexadecimal color (#FFFFFF)']);
         $table->addColumn('icon_file', 'string', ['length' => 150, 'notnull' => false]);
         $table->addColumn('status', 'boolean', ['default' => true]);
+        $table->setPrimaryKey(['id']);
     }
 
     public function down(Schema $schema): void
