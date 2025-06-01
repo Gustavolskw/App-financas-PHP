@@ -1,0 +1,150 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Acc\Migrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20250601031724 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Insert initial categories data in Portuguese';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // Income categories (type = true)
+        $incomeCategories = [
+            ['name' => 'Salário', 'type' => 1, 'color' => '#4CAF50', 'icon' => 'wallet', 'is_active' => true],
+            ['name' => 'Freelance', 'type' => 1, 'color' => '#8BC34A', 'icon' => 'briefcase', 'is_active' => true],
+            ['name' => 'Investimentos', 'type' => 1, 'color' => '#00BCD4', 'icon' => 'trending-up', 'is_active' => true],
+            ['name' => 'Vendas', 'type' => 1, 'color' => '#009688', 'icon' => 'shopping-cart', 'is_active' => true],
+            ['name' => 'Aluguel Recebido', 'type' => 1, 'color' => '#3F51B5', 'icon' => 'home', 'is_active' => true],
+            ['name' => 'Bônus', 'type' => 1, 'color' => '#9C27B0', 'icon' => 'gift', 'is_active' => true],
+            ['name' => 'Restituição', 'type' => 1, 'color' => '#673AB7', 'icon' => 'refresh', 'is_active' => true],
+            ['name' => 'Pensão', 'type' => 1, 'color' => '#607D8B', 'icon' => 'users', 'is_active' => true],
+            ['name' => 'Dividendos', 'type' => 1, 'color' => '#795548', 'icon' => 'percent', 'is_active' => true],
+            ['name' => 'Comissões', 'type' => 1, 'color' => '#FF6F00', 'icon' => 'award', 'is_active' => true],
+            ['name' => 'Prêmios', 'type' => 1, 'color' => '#FFB300', 'icon' => 'trophy', 'is_active' => true],
+            ['name' => 'Outros Rendimentos', 'type' => 1, 'color' => '#455A64', 'icon' => 'plus-circle', 'is_active' => true]
+        ];
+
+        // Expense categories (type = false)
+        $expenseCategories = [
+            // Moradia
+            ['name' => 'Aluguel', 'type' => 0, 'color' => '#795548', 'icon' => 'key', 'is_active' => true],
+            ['name' => 'Condomínio', 'type' => 0, 'color' => '#6D4C41', 'icon' => 'building', 'is_active' => true],
+            ['name' => 'IPTU', 'type' => 0, 'color' => '#5D4037', 'icon' => 'file-text', 'is_active' => true],
+            ['name' => 'Energia Elétrica', 'type' => 0, 'color' => '#FFC107', 'icon' => 'zap', 'is_active' => true],
+            ['name' => 'Água', 'type' => 0, 'color' => '#03A9F4', 'icon' => 'droplet', 'is_active' => true],
+            ['name' => 'Gás', 'type' => 0, 'color' => '#FF9800', 'icon' => 'flame', 'is_active' => true],
+            ['name' => 'Internet', 'type' => 0, 'color' => '#3F51B5', 'icon' => 'wifi', 'is_active' => true],
+            ['name' => 'Telefone', 'type' => 0, 'color' => '#009688', 'icon' => 'phone', 'is_active' => true],
+
+            // Alimentação
+            ['name' => 'Supermercado', 'type' => 0, 'color' => '#E91E63', 'icon' => 'shopping-basket', 'is_active' => true],
+            ['name' => 'Feira', 'type' => 0, 'color' => '#F06292', 'icon' => 'apple', 'is_active' => true],
+            ['name' => 'Padaria', 'type' => 0, 'color' => '#EC407A', 'icon' => 'coffee', 'is_active' => true],
+            ['name' => 'Açougue', 'type' => 0, 'color' => '#D81B60', 'icon' => 'drumstick-bite', 'is_active' => true],
+
+            // Transporte
+            ['name' => 'Combustível', 'type' => 0, 'color' => '#FF5722', 'icon' => 'gas-pump', 'is_active' => true],
+            ['name' => 'Transporte Público', 'type' => 0, 'color' => '#00BCD4', 'icon' => 'bus', 'is_active' => true],
+            ['name' => 'Uber/99/Taxi', 'type' => 0, 'color' => '#9C27B0', 'icon' => 'taxi', 'is_active' => true],
+            ['name' => 'Estacionamento', 'type' => 0, 'color' => '#673AB7', 'icon' => 'parking', 'is_active' => true],
+            ['name' => 'Pedágio', 'type' => 0, 'color' => '#512DA8', 'icon' => 'route', 'is_active' => true],
+            ['name' => 'Manutenção Veículo', 'type' => 0, 'color' => '#FF6F00', 'icon' => 'wrench', 'is_active' => true],
+            ['name' => 'Seguro Veículo', 'type' => 0, 'color' => '#E65100', 'icon' => 'shield-alt', 'is_active' => true],
+            ['name' => 'IPVA', 'type' => 0, 'color' => '#BF360C', 'icon' => 'car', 'is_active' => true],
+
+            // Saúde
+            ['name' => 'Plano de Saúde', 'type' => 0, 'color' => '#43A047', 'icon' => 'shield', 'is_active' => true],
+            ['name' => 'Farmácia', 'type' => 0, 'color' => '#8BC34A', 'icon' => 'pills', 'is_active' => true],
+            ['name' => 'Médico', 'type' => 0, 'color' => '#66BB6A', 'icon' => 'stethoscope', 'is_active' => true],
+            ['name' => 'Dentista', 'type' => 0, 'color' => '#4CAF50', 'icon' => 'tooth', 'is_active' => true],
+            ['name' => 'Exames', 'type' => 0, 'color' => '#388E3C', 'icon' => 'microscope', 'is_active' => true],
+            ['name' => 'Academia', 'type' => 0, 'color' => '#2E7D32', 'icon' => 'dumbbell', 'is_active' => true],
+
+            // Educação
+            ['name' => 'Escola/Faculdade', 'type' => 0, 'color' => '#1976D2', 'icon' => 'school', 'is_active' => true],
+            ['name' => 'Cursos', 'type' => 0, 'color' => '#1565C0', 'icon' => 'chalkboard-teacher', 'is_active' => true],
+            ['name' => 'Livros', 'type' => 0, 'color' => '#0D47A1', 'icon' => 'book', 'is_active' => true],
+            ['name' => 'Material Escolar', 'type' => 0, 'color' => '#01579B', 'icon' => 'pencil-alt', 'is_active' => true],
+
+            // Lazer e Entretenimento
+            ['name' => 'Restaurante', 'type' => 0, 'color' => '#D81B60', 'icon' => 'utensils', 'is_active' => true],
+            ['name' => 'Bares', 'type' => 0, 'color' => '#C2185B', 'icon' => 'beer', 'is_active' => true],
+            ['name' => 'Cinema', 'type' => 0, 'color' => '#AD1457', 'icon' => 'film', 'is_active' => true],
+            ['name' => 'Shows/Eventos', 'type' => 0, 'color' => '#880E4F', 'icon' => 'ticket-alt', 'is_active' => true],
+            ['name' => 'Viagem', 'type' => 0, 'color' => '#4A148C', 'icon' => 'plane', 'is_active' => true],
+            ['name' => 'Hotel', 'type' => 0, 'color' => '#6A1B9A', 'icon' => 'bed', 'is_active' => true],
+            ['name' => 'Streaming', 'type' => 0, 'color' => '#7B1FA2', 'icon' => 'tv', 'is_active' => true],
+
+            // Compras
+            ['name' => 'Roupas', 'type' => 0, 'color' => '#00695C', 'icon' => 'tshirt', 'is_active' => true],
+            ['name' => 'Calçados', 'type' => 0, 'color' => '#00897B', 'icon' => 'shoe-prints', 'is_active' => true],
+            ['name' => 'Eletrônicos', 'type' => 0, 'color' => '#00ACC1', 'icon' => 'laptop', 'is_active' => true],
+            ['name' => 'Móveis', 'type' => 0, 'color' => '#0097A7', 'icon' => 'couch', 'is_active' => true],
+            ['name' => 'Decoração', 'type' => 0, 'color' => '#00838F', 'icon' => 'paint-roller', 'is_active' => true],
+
+            // Serviços
+            ['name' => 'Cabeleireiro', 'type' => 0, 'color' => '#F48FB1', 'icon' => 'cut', 'is_active' => true],
+            ['name' => 'Manicure', 'type' => 0, 'color' => '#F06292', 'icon' => 'hand-sparkles', 'is_active' => true],
+            ['name' => 'Limpeza', 'type' => 0, 'color' => '#E91E63', 'icon' => 'broom', 'is_active' => true],
+            ['name' => 'Lavanderia', 'type' => 0, 'color' => '#D81B60', 'icon' => 'soap', 'is_active' => true],
+
+            // Outros
+            ['name' => 'Impostos', 'type' => 0, 'color' => '#424242', 'icon' => 'file-invoice-dollar', 'is_active' => true],
+            ['name' => 'Taxas Bancárias', 'type' => 0, 'color' => '#616161', 'icon' => 'university', 'is_active' => true],
+            ['name' => 'Multas', 'type' => 0, 'color' => '#F44336', 'icon' => 'exclamation-triangle', 'is_active' => true],
+            ['name' => 'Doações', 'type' => 0, 'color' => '#E91E63', 'icon' => 'hand-holding-heart', 'is_active' => true],
+            ['name' => 'Presentes', 'type' => 0, 'color' => '#9C27B0', 'icon' => 'gift', 'is_active' => true],
+            ['name' => 'Pet', 'type' => 0, 'color' => '#FF7043', 'icon' => 'paw', 'is_active' => true],
+            ['name' => 'Outros', 'type' => 0, 'color' => '#9E9E9E', 'icon' => 'ellipsis-h', 'is_active' => true]
+        ];
+
+        // Insert income categories
+        foreach ($incomeCategories as $category) {
+            $this->addSql('INSERT INTO categories (name, type, color, icon, is_active) VALUES (:name, :type, :color, :icon, :is_active)', $category);
+        }
+
+        // Insert expense categories
+        foreach ($expenseCategories as $category) {
+            $this->addSql('INSERT INTO categories (name, type, color, icon, is_active) VALUES (:name, :type, :color, :icon, :is_active)', $category);
+        }
+    }
+
+    public function down(Schema $schema): void
+    {
+        // Remove all inserted categories
+        $this->addSql('DELETE FROM categories WHERE name IN (
+            \'Salário\', \'Freelance\', \'Investimentos\', \'Vendas\', \'Aluguel Recebido\', \'Bônus\', \'Restituição\', \'Pensão\',
+            \'Dividendos\', \'Comissões\', \'Prêmios\', \'Outros Rendimentos\',
+            \'Aluguel\', \'Condomínio\', \'IPTU\', \'Energia Elétrica\', \'Água\', \'Gás\', \'Internet\', \'Telefone\',
+            \'Supermercado\', \'Feira\', \'Padaria\', \'Açougue\',
+            \'Combustível\', \'Transporte Público\', \'Uber/99/Taxi\', \'Estacionamento\', \'Pedágio\',
+            \'Manutenção Veículo\', \'Seguro Veículo\', \'IPVA\',
+            \'Plano de Saúde\', \'Farmácia\', \'Médico\', \'Dentista\',
+            \'Exames\', \'Academia\',
+            \'Escola/Faculdade\', \'Cursos\', \'Livros\', \'Material Escolar\',
+            \'Restaurante\', \'Bares\', \'Cinema\', \'Shows/Eventos\',
+            \'Viagem\', \'Hotel\', \'Streaming\',
+            \'Roupas\', \'Calçados\', \'Eletrônicos\', \'Móveis\',
+            \'Decoração\',
+            \'Cabeleireiro\', \'Manicure\', \'Limpeza\',\'Lavanderia\',
+            \'\',\'Impostos\',
+            \'\',\'Taxas Bancárias\',
+            \'\',\'Multas\',
+            \'\',\'Doações\',
+            \'\',\'Presentes\',
+            \'\',\'Pet\',
+            \'\',\'Outros\'
+        )');
+    }
+}

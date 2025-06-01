@@ -1,231 +1,241 @@
-## 💼 **Modelo de Banco de Dados — Finanças Pessoais**
+# Personal Finance Control Database Schema
 
----
+## Overview
+Simple and straightforward database design for personal monthly financial control. Each user has a single wallet to manage their personal finances with income/expense tracking and monthly budgeting capabilities.
 
-### 🧾 Tabela: `users`
-
-#### 📄 SQL
-
-```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-#### 📘 Explicação
-
-Usuários do sistema, contendo:
-
-* Nome, e-mail (único) e senha criptografada.
-* Data de criação do cadastro.
-
-#### 🧩 Função
-
-Identifica quem está usando o sistema. Todas as contas e dados financeiros pertencem a um usuário.
-
----
-
-### 🧾 Tabela: `accounts`
-
-#### 📄 SQL
+## Database Creation
 
 ```sql
-CREATE TABLE accounts (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    name VARCHAR(100) NOT NULL,
-    type VARCHAR(50),
-    initial_balance DECIMAL(12,2) DEFAULT 0.00,
-    currency VARCHAR(10) DEFAULT 'USD',
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE DATABASE IF NOT EXISTS financial_control 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+
+USE financial_control;
 ```
 
-#### 📘 Explicação
+## Table Structure
 
-Contas financeiras (banco, carteira etc.):
-
-* Tipo e saldo inicial.
-* Moeda e status ativo/inativo.
-
-#### 🧩 Função
-
-Organiza separadamente os saldos e transações de um usuário.
-
----
-
-### 🧾 Tabela: `categories`
-
-#### 📄 SQL
+### 1. Categories Table
+**Functionality**: Stores predefined categories for income and expenses (e.g., Salary, Food, Transport). Helps organize and classify transactions for better financial analysis.
 
 ```sql
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type BOOLEAN NOT NULL, -- TRUE = receita, FALSE = despesa
-    color VARCHAR(7),
-    icon VARCHAR(100),
-    is_custom BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    type ENUM('income', 'expense') NOT NULL,
+    color VARCHAR(7) NULL COMMENT 'Hexadecimal color (#FFFFFF)',
+    icon VARCHAR(50) NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_type (type),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB COMMENT='Income and expense categories';
 ```
 
-#### 📘 Explicação
+### 2. Wallets Table
+**Functionality**: Represents each user's personal wallet/account. One wallet per user acts as their main financial container where all transactions are recorded. Includes dual validation with both user_id and user_email for enhanced security. Balance is calculated entirely from transactions.
 
-Categorias de transações:
+```sql
+CREATE TABLE wallets (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL UNIQUE COMMENT 'User ID from auth microservice (unique per user)',
+    user_email VARCHAR(255) NOT NULL UNIQUE COMMENT 'User email for dual validation',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_user_id (user_id),
+    INDEX idx_user_email (user_email),
+    UNIQUE KEY uk_user_validation (user_id, user_email)
+) ENGINE=InnoDB COMMENT='Single wallet per user with dual validation';
+```
 
-* Compartilhadas entre todos os usuários.
-* Tipo `TRUE` (receita), `FALSE` (despesa).
-
-#### 🧩 Função
-
-Permite classificar transações para relatórios e organização.
-
----
-
-### 🧾 Tabela: `transactions`
-
-#### 📄 SQL
+### 3. Transactions Table
+**Functionality**: Core table that records all financial movements (income and expenses). Each transaction is linked to a category and wallet, with a simple boolean to distinguish between income (true) and expense (false).
 
 ```sql
 CREATE TABLE transactions (
-    id SERIAL PRIMARY KEY,
-    account_id INTEGER REFERENCES accounts(id),
-    category_id INTEGER REFERENCES categories(id),
-    description TEXT,
-    amount DECIMAL(12,2) NOT NULL,
-    type BOOLEAN NOT NULL, -- TRUE = receita, FALSE = despesa
-    date DATE NOT NULL,
-    is_recurring BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    wallet_id INT UNSIGNED NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
+    
+    description VARCHAR(255) NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    is_income BOOLEAN NOT NULL COMMENT 'true for income, false for expense',
+    transaction_date DATE NOT NULL,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_wallet_id (wallet_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_category_id (category_id),
+    INDEX idx_is_income (is_income),
+    INDEX idx_date (transaction_date),
+    INDEX idx_wallet_date (wallet_id, transaction_date),
+    INDEX idx_user_month (user_id, YEAR(transaction_date), MONTH(transaction_date)),
+    
+    FOREIGN KEY (wallet_id) REFERENCES wallets(id) ON DELETE RESTRICT,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
+) ENGINE=InnoDB COMMENT='Financial transactions';
 ```
 
-#### 📘 Explicação
-
-Registro de entradas e saídas:
-
-* Vinculadas a uma conta e categoria.
-* Inclui valor, descrição e recorrência.
-
-#### 🧩 Função
-
-É a base de todo controle financeiro. Permite montar extratos, relatórios e controle de saldo.
-
----
-
-### 🧾 Tabela: `financial_goals`
-
-#### 📄 SQL
+### 4. Monthly Budgets Table
+**Functionality**: Allows users to set spending limits for each category per month. Helps with financial planning and expense control by defining monthly goals for different expense categories.
 
 ```sql
-CREATE TABLE financial_goals (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    name VARCHAR(100) NOT NULL,
-    target_amount DECIMAL(12,2) NOT NULL,
-    current_amount DECIMAL(12,2) DEFAULT 0.00,
-    due_date DATE,
-    is_completed BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE monthly_budgets (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
+    
+    budgeted_amount DECIMAL(15,2) NOT NULL,
+    month TINYINT UNSIGNED NOT NULL COMMENT '1-12',
+    year YEAR NOT NULL,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_user_id (user_id),
+    INDEX idx_category_id (category_id),
+    INDEX idx_period (year, month),
+    
+    UNIQUE KEY uk_user_category_period (user_id, category_id, year, month),
+    
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
+) ENGINE=InnoDB COMMENT='Monthly budget per category';
 ```
 
-#### 📘 Explicação
+## Initial Data - Default Categories
 
-Metas de economia ou planejamento financeiro:
-
-* Valor-alvo, progresso e data-limite.
-
-#### 🧩 Função
-
-Ajuda o usuário a organizar seus objetivos e visualizar avanços.
-
----
-
-### 🧾 Tabela: `budgets`
-
-#### 📄 SQL
-
+### Income Categories
 ```sql
-CREATE TABLE budgets (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    category_id INTEGER REFERENCES categories(id),
-    limit_amount DECIMAL(12,2) NOT NULL,
-    month INTEGER CHECK (month BETWEEN 1 AND 12),
-    year INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+INSERT INTO categories (name, type, color, icon) VALUES
+('Salary', 'income', '#28a745', 'salary'),
+('Freelance', 'income', '#17a2b8', 'freelance'),
+('Investments', 'income', '#6f42c1', 'investment'),
+('Sales', 'income', '#fd7e14', 'sales'),
+('Other Income', 'income', '#6c757d', 'other');
 ```
 
-#### 📘 Explicação
-
-Orçamentos mensais por categoria:
-
-* Limites de gasto por mês e ano.
-
-#### 🧩 Função
-
-Permite definir e acompanhar limites de gastos mensais por categoria.
-
----
-
-### 🧾 Tabela: `user_settings`
-
-#### 📄 SQL
-
+### Expense Categories
 ```sql
-CREATE TABLE user_settings (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    key VARCHAR(100) NOT NULL,
-    value TEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, key)
-);
+INSERT INTO categories (name, type, color, icon) VALUES
+('Food', 'expense', '#dc3545', 'food'),
+('Transport', 'expense', '#007bff', 'transport'),
+('Housing', 'expense', '#28a745', 'home'),
+('Health', 'expense', '#e83e8c', 'health'),
+('Education', 'expense', '#6f42c1', 'education'),
+('Entertainment', 'expense', '#fd7e14', 'entertainment'),
+('Clothing', 'expense', '#20c997', 'clothing'),
+('Bills/Taxes', 'expense', '#6c757d', 'bills'),
+('Other Expenses', 'expense', '#343a40', 'other');
 ```
 
-#### 📘 Explicação
+## Common Queries for API Development
 
-Configurações personalizadas:
-
-* Exemplo: moeda padrão, tema, idioma.
-
-#### 🧩 Função
-
-Oferece customização por usuário, sem modificar a estrutura geral do sistema.
-
----
-
-### 🧾 Tabela: `currencies`
-
-#### 📄 SQL
-
+### Get wallet information with dual validation
 ```sql
-CREATE TABLE currencies (
-    code CHAR(3) PRIMARY KEY,
-    name VARCHAR(50),
-    symbol VARCHAR(10),
-    exchange_rate_to_usd DECIMAL(12,6)
-);
+SELECT id, created_at 
+FROM wallets 
+WHERE user_id = ? AND user_email = ?;
 ```
 
-#### 📘 Explicação
+### Calculate current balance (from transactions only)
+```sql
+SELECT 
+    COALESCE(
+        SUM(CASE WHEN is_income = 1 THEN amount ELSE -amount END), 0
+    ) as current_balance
+FROM transactions 
+WHERE wallet_id = ?;
+```
 
-Lista de moedas disponíveis:
+### Get monthly income
+```sql
+SELECT SUM(amount) as total_income
+FROM transactions 
+WHERE wallet_id = ? 
+  AND is_income = 1
+  AND YEAR(transaction_date) = ? 
+  AND MONTH(transaction_date) = ?;
+```
 
-* Com símbolo e taxa de conversão para USD.
+### Get monthly expenses
+```sql
+SELECT SUM(amount) as total_expenses
+FROM transactions 
+WHERE wallet_id = ? 
+  AND is_income = 0
+  AND YEAR(transaction_date) = ? 
+  AND MONTH(transaction_date) = ?;
+```
 
-#### 🧩 Função
+### Get expenses by category (current month)
+```sql
+SELECT c.name, c.color, SUM(t.amount) as spent
+FROM transactions t 
+JOIN categories c ON t.category_id = c.id 
+WHERE t.wallet_id = ? 
+  AND t.is_income = 0
+  AND YEAR(t.transaction_date) = YEAR(CURDATE())
+  AND MONTH(t.transaction_date) = MONTH(CURDATE())
+GROUP BY c.id, c.name, c.color;
+```
 
-Permite múltiplas moedas por conta e exibição adequada dos saldos.
+### Get budget vs actual spending
+```sql
+SELECT 
+    c.name,
+    mb.budgeted_amount,
+    COALESCE(SUM(t.amount), 0) as spent_amount,
+    (mb.budgeted_amount - COALESCE(SUM(t.amount), 0)) as remaining
+FROM monthly_budgets mb
+JOIN categories c ON mb.category_id = c.id
+LEFT JOIN transactions t ON t.category_id = mb.category_id 
+    AND t.user_id = mb.user_id
+    AND YEAR(t.transaction_date) = mb.year
+    AND MONTH(t.transaction_date) = mb.month
+    AND t.is_income = 0
+WHERE mb.user_id = ? 
+  AND mb.year = ? 
+  AND mb.month = ?
+GROUP BY mb.id, c.name, mb.budgeted_amount;
+```
 
----
+### Get recent transactions
+```sql
+SELECT 
+    t.id,
+    t.description,
+    t.amount,
+    t.is_income,
+    t.transaction_date,
+    c.name as category_name,
+    c.color as category_color
+FROM transactions t
+JOIN categories c ON t.category_id = c.id
+WHERE t.wallet_id = ?
+ORDER BY t.transaction_date DESC, t.created_at DESC
+LIMIT 20;
+```
 
-Se desejar, posso gerar os scripts de **criação em arquivo `.sql`**, **popular as tabelas com dados iniciais** ou **prototipar a interface/API** com base nesse modelo. Deseja algum desses próximos passos?
+## API Integration Notes
+
+1. **User Wallet Creation**: When a new user registers in your auth microservice, automatically create a wallet entry with both user_id and user_email
+2. **Dual Validation**: Always validate operations using both user_id AND user_email for enhanced security
+3. **Transaction-Based Balance**: All balance calculations are done entirely from transactions - no stored balance fields
+4. **Monthly Reports**: Use the provided queries to generate monthly financial reports
+5. **Budget Tracking**: Compare budgeted amounts with actual spending for budget alerts
+
+## Database Features
+
+- **Simple Structure**: Only 4 tables for easy maintenance
+- **One Wallet Per User**: Simplified financial management
+- **Monthly Focus**: Designed for monthly financial control
+- **Categorized Transactions**: Better financial analysis and reporting
+- **Budget Control**: Monthly spending limits per category
+- **Optimized Indexes**: Fast queries for common operations
+- **Foreign Key Constraints**: Data integrity protection

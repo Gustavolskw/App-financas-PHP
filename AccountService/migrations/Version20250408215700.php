@@ -14,27 +14,34 @@ final class Version20250408215700 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Generating accounts table';
+        return 'Migration to create categories table for income and expense categories';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql("CREATE TABLE `accounts` (
-        `id` bigint NOT NULL AUTO_INCREMENT,
-        `user_id` bigint NOT NULL,
-        `user_email` varchar(255) NOT NULL,
-        `name` varchar(80) NOT NULL,
-        `description` text NOT NULL,
-        `status` tinyint(1) NOT NULL DEFAULT '1',
-        `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-        `updated_at` timestamp DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`)
-        )");
+        $table = $schema->createTable('categories');
+        $table->addColumn('id', 'bigint', ['unsigned' => true, 'autoincrement' => true]);
+        $table->addColumn('name', 'string', ['length' => 100, 'notnull' => true]);
+        $table->addColumn('type', 'boolean', ['notnull' => true, 'comment' => 'true for income, false for expense']);
+//        $table->addColumn('color', 'string', ['length' => 7, 'notnull' => false, 'comment' => 'Hexadecimal color (#FFFFFF)']);
+//        $table->addColumn('icon', 'string', ['length' => 50, 'notnull' => false]);
+        $table->addColumn('icon_id', 'bigint', ['unsigned' => true, 'notnull' => false, 'comment' => 'Foreign key to icons table']);
+        $table->addForeignKeyConstraint('icons', ['icon_id'], ['id'], ['onDelete' => 'SET NULL'], 'fk_category_icon');
+        $table->addColumn('status', 'boolean', ['default' => true]);
+        $table->addColumn('created_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
+        $table->addColumn('updated_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
+
+        $table->setPrimaryKey(['id']);
+
+        $table->addIndex(['type'], 'idx_type');
+        $table->addIndex(['status'], 'idx_active');
+        $table->addIndex(['icon_id'], 'idx_icon_id');
+        // Add comment to table
+        $table->addOption('comment', 'Income and expense categories');
     }
 
     public function down(Schema $schema): void
     {
-        $schema->dropTable('accounts');
-
+        $schema->dropTable('categories');
     }
 }
