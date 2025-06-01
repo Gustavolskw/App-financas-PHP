@@ -23,8 +23,6 @@ final class Version20250408215700 extends AbstractMigration
         $table->addColumn('id', 'bigint', ['unsigned' => true, 'autoincrement' => true]);
         $table->addColumn('name', 'string', ['length' => 100, 'notnull' => true]);
         $table->addColumn('type', 'boolean', ['notnull' => true, 'comment' => 'true for income, false for expense']);
-//        $table->addColumn('color', 'string', ['length' => 7, 'notnull' => false, 'comment' => 'Hexadecimal color (#FFFFFF)']);
-//        $table->addColumn('icon', 'string', ['length' => 50, 'notnull' => false]);
         $table->addColumn('icon_id', 'bigint', ['unsigned' => true, 'notnull' => false, 'comment' => 'Foreign key to icons table']);
         $table->addForeignKeyConstraint('icons', ['icon_id'], ['id'], ['onDelete' => 'SET NULL'], 'fk_category_icon');
         $table->addColumn('status', 'boolean', ['default' => true]);
