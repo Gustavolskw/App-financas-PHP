@@ -43,9 +43,9 @@ services:
     networks:
       - fin-app
 
-  mongodb:
+  mongodb-fin:
     image: mongo:7.0.5
-    container_name: mongodb
+    container_name: mongodb-fin
     ports:
       - "27017:27017"
     environment:

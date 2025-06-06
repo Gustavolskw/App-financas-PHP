@@ -1,16 +1,31 @@
 # Dockerfile
-FROM php:8.2-apache
+FROM php:8.4.3-apache
 
 
 
 # Instala extensoes e ferramentas necessarias
-RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl libpq-dev \
-    supervisor \
-    && docker-php-ext-install zip sockets pdo pdo_mysql bcmath \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && apt-get clean
+RUN apt-get update && \
+    apt-get install -y \
+        libzip-dev \
+        libicu-dev \
+        zip \
+        unzip \
+        git \
+        curl \
+        libpq-dev \
+        supervisor \
+        && docker-php-ext-install \
+            zip \
+            sockets \
+            pdo \
+            pdo_mysql \
+            bcmath \
+            intl && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 
 
 # Instala Composer
