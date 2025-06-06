@@ -10,28 +10,19 @@ class Category
     private int $id;
     private string $name;
     private bool $type;
-    private string $color;
-    private string $icon;
-    private bool $isActive;
+    private Icon $icon;
+    private bool $status;
     private DateTimeInterface $createdAt;
     private DateTimeInterface $updatedAt;
 
-    public function __construct(
-        int $id,
-        string $name,
-        bool $type,
-        string $color = '#FFFFFF',
-        string $icon = '',
-        bool $isActive = true,
-        DateTimeInterface $createdAt = null,
-        DateTimeInterface $updatedAt = null
-    ) {
+
+    public function __construct(int $id, string $name, bool $type, Icon $icon, bool $status = true, DateTimeInterface|null $createdAt, DateTimeInterface|null $updatedAt)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->type = $type;
-        $this->color = $color;
         $this->icon = $icon;
-        $this->isActive = $isActive;
+        $this->status = $status;
         $this->createdAt = $createdAt ?? new DateTimeImmutable();
         $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
     }
@@ -66,44 +57,29 @@ class Category
         $this->type = $type;
     }
 
-    public function getColor(): string
-    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): void
-    {
-        $this->color = $color;
-    }
-
-    public function getIcon(): string
+    public function getIcon(): Icon
     {
         return $this->icon;
     }
 
-    public function setIcon(string $icon): void
+    public function setIcon(Icon $icon): void
     {
         $this->icon = $icon;
     }
 
-    public function isActive(): bool
+    public function isStatus(): bool
     {
-        return $this->isActive;
+        return $this->status;
     }
 
-    public function setIsActive(bool $isActive): void
+    public function setStatus(bool $status): void
     {
-        $this->isActive = $isActive;
+        $this->status = $status;
     }
 
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function getUpdatedAt(): DateTimeInterface
@@ -115,4 +91,8 @@ class Category
     {
         $this->updatedAt = $updatedAt;
     }
+
+
+
+
 }

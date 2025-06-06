@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
-use App\Domain\Interfaces\AccountRepository;
-use App\Infrastructure\Persistence\Account\PdoAccountRepository;
+use App\Domain\Interfaces\WalletRepository;
+use App\Infrastructure\Persistence\Wallet\PdoWalletRepository;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -57,6 +57,6 @@ return function (ContainerBuilder $containerBuilder) {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ],
         ],
-        AccountRepository::class => DI\autowire(PdoAccountRepository::class),
+        WalletRepository::class => DI\autowire(PdoWalletRepository::class),
     ]);
 };

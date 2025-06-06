@@ -7,36 +7,42 @@ namespace Acc\Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 final class Version20250601184618 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Migration to create icons data';
+        return 'Migração para inserir dados iniciais na tabela de ícones (nomes e arquivos em português)';
     }
+
     public function up(Schema $schema): void
     {
-        $mainIcons = [
-            ['name' => 'money', 'color'=> '#4CAF50', 'icon_file' => 'money.svg', 'status' => true],
-            ['name' => 'expense', 'color' => '#F44336', 'icon_file' => 'expense.svg', 'status' => true],
-            ['name' => 'income', 'color' => '#2196F3', 'icon_file' => 'income.svg', 'status' => true],
-            ['name' => 'savings', 'color' => '#FF9800', 'icon_file' => 'savings.svg', 'status' => true],
-            ['name' => 'budget', 'color' => '#9C27B0', 'icon_file' => 'budget.svg', 'status' => true],
+        $icones = [
+            ['name' => 'dinheiro',     'color'=> '#4CAF50', 'icon_file' => 'dinheiro.svg',     'status' => true],
+            ['name' => 'despesa',      'color' => '#F44336', 'icon_file' => 'despesa.svg',      'status' => true],
+            ['name' => 'receita',      'color' => '#2196F3', 'icon_file' => 'receita.svg',      'status' => true],
+            ['name' => 'poupança',     'color' => '#FF9800', 'icon_file' => 'poupanca.svg',     'status' => true],
+            ['name' => 'orçamento',    'color' => '#9C27B0', 'icon_file' => 'orcamento.svg',    'status' => true],
+            ['name' => 'compras',      'color' => '#795548', 'icon_file' => 'compras.svg',      'status' => true],
+            ['name' => 'viagem',       'color' => '#00BCD4', 'icon_file' => 'viagem.svg',       'status' => true],
+            ['name' => 'alimentação',  'color' => '#8BC34A', 'icon_file' => 'alimentacao.svg',  'status' => true],
+            ['name' => 'saúde',        'color' => '#E91E63', 'icon_file' => 'saude.svg',        'status' => true],
+            ['name' => 'transporte',   'color' => '#3F51B5', 'icon_file' => 'transporte.svg',   'status' => true],
+            ['name' => 'educação',     'color' => '#FFC107', 'icon_file' => 'educacao.svg',     'status' => true],
         ];
-        foreach ($mainIcons as $mainIcon) {
+
+        foreach ($icones as $icone) {
             $this->addSql(
                 'INSERT INTO icons (name, color, icon_file, status) VALUES (?, ?, ?, ?)',
                 [
-                    $mainIcon['name'],
-                    $mainIcon['color'],
-                    $mainIcon['icon_file'],
-                    $mainIcon['status']
+                    $icone['name'],
+                    $icone['color'],
+                    $icone['icon_file'],
+                    $icone['status']
                 ]
             );
         }
     }
+
     public function down(Schema $schema): void
     {
         $this->addSql("TRUNCATE TABLE icons");
