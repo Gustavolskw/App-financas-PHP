@@ -2,11 +2,11 @@
 
 namespace App\Application\UseCases\Account;
 
-use App\Application\UseCases\UseCaseService;
+use App\Application\UseCases\UseCase;
 use App\Domain\Interfaces\AccountRepository;
 use Psr\Log\LoggerInterface;
 
-class AccountStatusUpdaterCase extends UseCaseService
+class AccountStatusUpdaterCase extends UseCase
 {
 
     public function __construct(

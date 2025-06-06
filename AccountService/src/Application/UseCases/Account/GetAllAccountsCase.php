@@ -2,7 +2,7 @@
 
 namespace App\Application\UseCases\Account;
 
-use App\Application\UseCases\UseCaseService;
+use App\Application\UseCases\UseCase;
 use App\Domain\DTO\AccountDTO;
 use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Interfaces\AccountRepository;
@@ -10,7 +10,7 @@ use App\Infrastructure\Persistence\Account\PdoAccountRepository;
 use DomainException;
 use Psr\Log\LoggerInterface;
 
-class GetAllAccountsCase extends UseCaseService
+class GetAllAccountsCase extends UseCase
 {
     public function __construct(
         private readonly LoggerInterface   $logger,

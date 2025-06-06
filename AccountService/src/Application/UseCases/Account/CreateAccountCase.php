@@ -3,7 +3,7 @@
 namespace App\Application\UseCases\Account;
 
 use App\Application\Handlers\ServiceHttpHandler;
-use App\Application\UseCases\UseCaseService;
+use App\Application\UseCases\UseCase;
 use App\Domain\DTO\AccountDTO;
 use App\Domain\Entity\Account;
 use App\Domain\Exception\InvalidUserException;
@@ -13,7 +13,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 use Psr\Log\LoggerInterface;
 
-class CreateAccountCase extends UseCaseService
+class CreateAccountCase extends UseCase
 {
     public function __construct(
         private readonly LoggerInterface   $logger,

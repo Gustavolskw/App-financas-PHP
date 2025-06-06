@@ -23,6 +23,7 @@ final class Version20250601184622 extends AbstractMigration
         $table->addColumn('id', 'bigint', ['autoincrement' => true]);
         $table->addColumn('user_id', 'bigint', ['notnull' => true, 'comment' => 'User ID from auth microservice (unique per user)']);
         $table->addColumn('user_email', 'string', ['length' => 255, 'notnull' => true, 'comment' => 'User email for dual validation']);
+        $table->addColumn('status', 'boolean', ['default' => true, 'comment' => 'Active status of the wallet']);
         $table->addColumn('created_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
         $table->addColumn('updated_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP']);
 

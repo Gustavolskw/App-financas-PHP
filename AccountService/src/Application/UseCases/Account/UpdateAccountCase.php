@@ -2,13 +2,13 @@
 
 namespace App\Application\UseCases\Account;
 
-use App\Application\UseCases\UseCaseService;
+use App\Application\UseCases\UseCase;
 use App\Domain\DTO\AccountDTO;
 use App\Domain\Interfaces\AccountRepository;
 use JsonException;
 use Psr\Log\LoggerInterface;
 
-class UpdateAccountCase extends UseCaseService
+class UpdateAccountCase extends UseCase
 {
 
     public function __construct(

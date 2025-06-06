@@ -2,13 +2,13 @@
 
 namespace App\Application\UseCases\Account;
 
-use App\Application\UseCases\UseCaseService;
+use App\Application\UseCases\UseCase;
 use App\Domain\DTO\AccountDTO;
 use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Interfaces\AccountRepository;
 use Psr\Log\LoggerInterface;
 
-class GetAccountCase extends UseCaseService
+class GetAccountCase extends UseCase
 {
     public function __construct(
         private readonly LoggerInterface   $logger,
