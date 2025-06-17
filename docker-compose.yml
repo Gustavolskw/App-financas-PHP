@@ -76,7 +76,7 @@ services:
 
   account-service:
     build:
-      context: ./AccountService
+      context: FinancialService
       dockerfile: Dockerfile
     container_name: account-service
     extra_hosts:
@@ -84,9 +84,9 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ./AccountService:/var/www/html # Mounting the project folder directly
+      - ./FinancialService:/var/www/html # Mounting the project folder directly
     env_file:
-      - ./AccountService/.env
+      - FinancialService/.env
     depends_on:
       - rabbitmq
       - mysql

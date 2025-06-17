@@ -57,7 +57,7 @@ $server->on('finish', function (Server $server, $task_id, $data) {
 });
 
 $server->on('start', function (Server $server) {
-    echo "AccountService running on http://0.0.0.0:9502\n";
+    echo "FinancialService running on http://0.0.0.0:9502\n";
 
 
     $server->task(['type' => 'inactivation']);
