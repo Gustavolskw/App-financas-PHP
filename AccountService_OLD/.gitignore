@@ -1,4 +1,0 @@
-.env
-vendor
-composer.lock
-migration_counter.txt
