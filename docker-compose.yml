@@ -74,7 +74,7 @@ services:
     networks:
       - fin-app
 
-  account-service:
+  financial-service:
     build:
       context: FinancialService
       dockerfile: Dockerfile
