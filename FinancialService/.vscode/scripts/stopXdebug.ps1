@@ -1,0 +1,5 @@
+docker-compose exec php sh -c 'sed -i "/xdebug.force_display_errors=1/c\\xdebug.force_display_errors=0" /etc/php.d/15-xdebug.ini'
+docker-compose exec php sh -c 'sed -i "/xdebug.dump_globals=true/c\\xdebug.dump_globals=false" /etc/php.d/15-xdebug.ini'
+docker-compose exec php sh -c 'sed -i "/xdebug.show_local_vars=3/c\\xdebug.show_local_vars=0" /etc/php.d/15-xdebug.ini'
+docker-compose exec php sh -c 'sed -i "/xdebug.profiler_enable=1/c\\xdebug.profiler_enable=0" /etc/php.d/15-xdebug.ini'
+docker-compose exec php sh -c '/usr/sbin/httpd -k graceful'

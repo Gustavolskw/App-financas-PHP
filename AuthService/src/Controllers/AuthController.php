@@ -5,6 +5,7 @@ use Auth\Entity\User;
 use Auth\Services\AuthService;
 use Auth\Translations\ValidationMessages;
 use Exception;
+use Illuminate\Container\EntryNotFoundException;
 use Illuminate\Validation\Factory as ValidationFactory;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
@@ -177,6 +178,9 @@ class AuthController
 
             $this->resp->response($result, 200, $response);
         } catch (Exception $e) {
+            if($e instanceof EntryNotFoundException){
+                $this->resp->exceptionResponse($e, $response);
+            }
             $this->resp->exceptionResponse($e, $response);
         }
     }
@@ -229,6 +233,31 @@ class AuthController
             $result = $this->authService->verifyUser($valData['id'], $valData['email']);
             $this->resp->response($result, 200, $response);
         } catch (Exception $e) {
+            $this->resp->exceptionResponse($e, $response);
+        }
+    }
+
+
+    public function getUserById(Request $request, Response $response, int $id)
+    {
+
+        $data = ['id' => $id];
+        $rules = [
+            'id' => 'required|integer',
+        ];
+        $validation = $this->validator->make($data, $rules, ValidationMessages::getMessages());
+
+        if ($validation->fails()) {
+            $this->resp->response(['error' => $validation->errors()->all()], 422, $response);
+        }
+
+        try{
+            $valData = $validation->validated();
+            $result = $this->authService->getUserById($valData['id']);
+            $this->resp->response($result, 200, $response);
+        }catch(EntryNotFoundException $e) {
+            $this->resp->response(null, 204, $response);
+        }catch(Exception $e){
             $this->resp->exceptionResponse($e, $response);
         }
     }

@@ -1,4 +1,13 @@
-version: "4"
+version: "3.8" # (Optional) Remove version if you are using docker-compose v2.x or higher
+volumes:
+  mysql-volume:
+    driver: local
+  redis:
+    driver: local
+  rabbitmq:
+    driver: local
+  mongodb:
+    driver: local
 
 services:
   mysql:
@@ -9,78 +18,93 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql-volume:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - fin-app
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq-container
     ports:
-      - "15672:15672" # Interface web de gerenciamento
-      - "5672:5672" # Porta padrão do protocolo AMQP
+      - "15672:15672"
+      - "5672:5672"
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS:-guest}
     networks:
-      - fin-app # Conectar na rede 'sail'
+      - fin-app
+
   redis:
     image: redis:latest
     container_name: redis-container
     ports:
-      - "6379:6379" # Porta para comunicação com Redis
+      - "6379:6379"
     networks:
-      - fin-app # Conectar na rede 'sail'
-  mongodb:
+      - fin-app
+
+  mongodb-fin:
     image: mongo:7.0.5
-    container_name: mongodb
+    container_name: mongodb-fin
     ports:
-      - "27017:27017" # Porta para comunicação com o MongoDB
+      - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root} # Usuário raiz do MongoDB
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password} # Senha do MongoDB
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-product-service} # Nome do banco de dados inicial
-    volumes:
-      - ./data/mongodb:/data/db # Persistência de dados
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-product-service}
     networks:
-      - fin-app # Conectar na rede 'sail'
+      - fin-app
+
   auth-service:
     build:
       context: ./AuthService
       dockerfile: Dockerfile
     container_name: auth-service
     ports:
-      - "9501:9501"
+      - "9501"
     volumes:
-      - ./src:/app # mount only the `src` folder to avoid permission issues
+      - ./AuthService:/app # Mounting the `src` folder directly
     env_file:
       - ./AuthService/.env
-    command: ["sh", "-c", "sleep 10 && php server.php"] # Delay startup by 10 seconds
+    command: ["sh", "-c", "sleep 10 && php server.php"]
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
     networks:
       - fin-app
-  account-service:
+
+  financial-service:
     build:
-      context: ./AccountService
+      context: FinancialService
       dockerfile: Dockerfile
     container_name: account-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
-      - "9502:9502"
+      - "8081:8081"
     volumes:
-      - ./src:/app # mount only the `src` folder
+      - ./FinancialService:/var/www/html # Mounting the project folder directly
     env_file:
-      - ./AccountService/.env
-    command: ["sh", "-c", "sleep 10 &&  php server.php"] # Delay startup by 10 seconds
+      - FinancialService/.env
     depends_on:
       - rabbitmq
+      - mysql
     networks:
       - fin-app
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth-service
+    networks:
+      - fin-app
+
 networks:
   fin-app:
-    driver: bridge # Rede isolada entre os contêineres
-volumes:
-  sail-mysql:
-    driver: local # Volume para o MySQL
-  sail-redis:
-    driver: local # Volume para o Redis
+    driver: bridge

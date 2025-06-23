@@ -1,32 +1,42 @@
 <?php
+
 namespace Auth\Config;
 
+use PDO;
+use PDOException;
 use Dotenv\Dotenv;
-use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Database
 {
-    public static function bootEloquent(): void
+    private static ?PDO $pdo = null;
+
+    public static function getPDO(): ?PDO
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->load();
+        if (self::$pdo === null) {
+            try {
+                // Carrega variáveis de ambiente (.env)
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+                $dotenv->safeLoad();
 
-        echo "DRIVER" . $_ENV['DB_DRIVER'];
+                $host = $_ENV['DB_HOST'] ?? 'localhost';
+                $port = $_ENV['DB_PORT'] ?? '3306';
+                $dbname = $_ENV['DB_NAME'] ?? 'test';
+                $username = $_ENV['DB_USER'] ?? 'root';
+                $password = $_ENV['DB_PASS'] ?? '';
 
-        $capsule = new Capsule;
-        $capsule->addConnection([
-            'driver' => "mysql",
-            'host' => $_ENV['DB_HOST'],
-            'port' => $_ENV['DB_PORT'],
-            'database' => $_ENV['DB_NAME'],
-            'username' => $_ENV['DB_USER'],
-            'password' => $_ENV['DB_PASS'],
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-        ]);
+                $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+                self::$pdo = new PDO($dsn, $username, $password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            } catch (PDOException $e) {
+                echo "Erro ao conectar ao banco de dados: " . $e->getMessage();
+                exit; // evita continuar com conexão nula
+            }
+        }
+
+        return self::$pdo;
     }
 }

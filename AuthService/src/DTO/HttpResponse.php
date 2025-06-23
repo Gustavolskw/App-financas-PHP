@@ -13,7 +13,11 @@ class HttpResponse
     {
         $response->status($status);
         $response->header('Content-Type', 'application/json');
-        $response->end(json_encode($data));
+        if($data === null){
+            $response->end();
+        }else{
+            $response->end( json_encode($data));
+        }
     }
 
     public function exceptionResponse(Exception $e, Response $response)

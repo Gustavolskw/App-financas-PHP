@@ -1,0 +1,291 @@
+2025-04-17 15:54:40,513 INFO Set uid to user 0 succeeded
+2025-04-17 15:54:40,519 INFO supervisord started with pid 1
+2025-04-17 15:54:41,537 INFO spawned: 'apache' with pid 7
+2025-04-17 15:54:43,083 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-17 16:12:40,128 INFO Set uid to user 0 succeeded
+2025-04-17 16:12:40,130 INFO supervisord started with pid 1
+2025-04-17 16:12:41,134 INFO spawned: 'apache' with pid 7
+2025-04-17 16:12:42,277 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 20:24:58,184 INFO Set uid to user 0 succeeded
+2025-04-19 20:24:58,185 INFO supervisord started with pid 1
+2025-04-19 20:24:59,187 INFO spawned: 'apache' with pid 7
+2025-04-19 20:25:00,237 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 20:29:36,699 INFO Set uid to user 0 succeeded
+2025-04-19 20:29:36,700 INFO supervisord started with pid 1
+2025-04-19 20:29:37,703 INFO spawned: 'apache' with pid 7
+2025-04-19 20:29:38,741 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 20:30:13,208 INFO Set uid to user 0 succeeded
+2025-04-19 20:30:13,209 INFO supervisord started with pid 1
+2025-04-19 20:30:14,212 INFO spawned: 'apache' with pid 7
+2025-04-19 20:30:15,250 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 21:28:55,820 INFO Set uid to user 0 succeeded
+2025-04-19 21:28:55,822 INFO supervisord started with pid 1
+2025-04-19 21:28:56,824 INFO spawned: 'apache' with pid 7
+2025-04-19 21:28:57,910 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 21:33:45,479 INFO Set uid to user 0 succeeded
+2025-04-19 21:33:45,481 INFO supervisord started with pid 1
+2025-04-19 21:33:46,484 INFO spawned: 'apache' with pid 7
+2025-04-19 21:33:47,522 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 21:34:33,489 INFO Set uid to user 0 succeeded
+2025-04-19 21:34:33,490 INFO supervisord started with pid 1
+2025-04-19 21:34:34,493 INFO spawned: 'apache' with pid 7
+2025-04-19 21:34:35,530 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 22:05:20,835 INFO Set uid to user 0 succeeded
+2025-04-19 22:05:20,837 INFO supervisord started with pid 1
+2025-04-19 22:05:21,839 INFO spawned: 'apache' with pid 7
+2025-04-19 22:05:22,886 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-19 22:10:19,295 INFO Set uid to user 0 succeeded
+2025-04-19 22:10:19,297 INFO supervisord started with pid 1
+2025-04-19 22:10:20,299 INFO spawned: 'apache' with pid 7
+2025-04-19 22:10:21,349 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 14:31:15,995 INFO Set uid to user 0 succeeded
+2025-04-21 14:31:15,997 INFO supervisord started with pid 1
+2025-04-21 14:31:17,000 INFO spawned: 'apache' with pid 7
+2025-04-21 14:31:18,109 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 14:32:34,449 INFO Set uid to user 0 succeeded
+2025-04-21 14:32:34,451 INFO supervisord started with pid 1
+2025-04-21 14:32:35,453 INFO spawned: 'apache' with pid 7
+2025-04-21 14:32:36,501 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 14:50:04,980 INFO Set uid to user 0 succeeded
+2025-04-21 14:50:04,982 INFO supervisord started with pid 1
+2025-04-21 14:50:05,984 INFO spawned: 'apache' with pid 7
+2025-04-21 14:50:07,050 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 14:55:31,716 INFO Set uid to user 0 succeeded
+2025-04-21 14:55:31,718 INFO supervisord started with pid 1
+2025-04-21 14:55:32,720 INFO spawned: 'apache' with pid 7
+2025-04-21 14:55:33,768 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 16:00:27,724 INFO Set uid to user 0 succeeded
+2025-04-21 16:00:27,725 INFO supervisord started with pid 1
+2025-04-21 16:00:28,727 INFO spawned: 'apache' with pid 7
+2025-04-21 16:00:29,796 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 16:12:25,270 INFO Set uid to user 0 succeeded
+2025-04-21 16:12:25,271 INFO supervisord started with pid 1
+2025-04-21 16:12:26,273 INFO spawned: 'apache' with pid 7
+2025-04-21 16:12:27,313 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 16:15:59,114 INFO Set uid to user 0 succeeded
+2025-04-21 16:15:59,116 INFO supervisord started with pid 1
+2025-04-21 16:16:00,118 INFO spawned: 'apache' with pid 7
+2025-04-21 16:16:01,168 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-21 22:56:20,055 INFO Set uid to user 0 succeeded
+2025-04-21 22:56:20,058 INFO supervisord started with pid 1
+2025-04-21 22:56:21,060 INFO spawned: 'apache' with pid 7
+2025-04-21 22:56:22,164 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-22 16:01:37,021 INFO Set uid to user 0 succeeded
+2025-04-22 16:01:37,026 INFO supervisord started with pid 1
+2025-04-22 16:01:38,029 INFO spawned: 'apache' with pid 7
+2025-04-22 16:01:39,190 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-22 16:12:37,047 INFO Set uid to user 0 succeeded
+2025-04-22 16:12:37,054 INFO supervisord started with pid 1
+2025-04-22 16:12:38,057 INFO spawned: 'apache' with pid 7
+2025-04-22 16:12:39,223 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-22 16:42:09,376 INFO Set uid to user 0 succeeded
+2025-04-22 16:42:09,380 INFO supervisord started with pid 1
+2025-04-22 16:42:10,382 INFO spawned: 'apache' with pid 7
+2025-04-22 16:42:11,603 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-22 16:46:15,972 INFO Set uid to user 0 succeeded
+2025-04-22 16:46:15,976 INFO supervisord started with pid 1
+2025-04-22 16:46:16,983 INFO spawned: 'apache' with pid 7
+2025-04-22 16:46:18,331 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-22 19:18:07,305 INFO Set uid to user 0 succeeded
+2025-04-22 19:18:07,309 INFO supervisord started with pid 1
+2025-04-22 19:18:08,314 INFO spawned: 'apache' with pid 7
+2025-04-22 19:18:09,490 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-23 11:18:09,282 INFO Set uid to user 0 succeeded
+2025-04-23 11:18:09,287 INFO supervisord started with pid 1
+2025-04-23 11:18:10,290 INFO spawned: 'apache' with pid 7
+2025-04-23 11:18:11,445 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-23 15:55:08,428 INFO Set uid to user 0 succeeded
+2025-04-23 15:55:08,435 INFO supervisord started with pid 1
+2025-04-23 15:55:09,438 INFO spawned: 'apache' with pid 7
+2025-04-23 15:55:10,582 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-28 11:39:44,733 INFO Set uid to user 0 succeeded
+2025-04-28 11:39:44,739 INFO supervisord started with pid 1
+2025-04-28 11:39:45,741 INFO spawned: 'apache' with pid 7
+2025-04-28 11:39:46,910 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-28 12:17:31,385 INFO Set uid to user 0 succeeded
+2025-04-28 12:17:31,394 INFO supervisord started with pid 1
+2025-04-28 12:17:32,399 INFO spawned: 'apache' with pid 7
+2025-04-28 12:17:33,661 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-28 12:27:59,772 INFO Set uid to user 0 succeeded
+2025-04-28 12:27:59,775 INFO supervisord started with pid 1
+2025-04-28 12:28:00,779 INFO spawned: 'apache' with pid 16
+2025-04-28 12:28:01,869 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:22:56,673 INFO Set uid to user 0 succeeded
+2025-04-29 00:22:56,676 INFO supervisord started with pid 1
+2025-04-29 00:22:57,678 INFO spawned: 'apache' with pid 7
+2025-04-29 00:22:58,781 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:38:44,382 INFO Set uid to user 0 succeeded
+2025-04-29 00:38:44,384 INFO supervisord started with pid 1
+2025-04-29 00:38:45,386 INFO spawned: 'apache' with pid 7
+2025-04-29 00:38:46,432 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:46:39,280 INFO Set uid to user 0 succeeded
+2025-04-29 00:46:39,281 INFO supervisord started with pid 1
+2025-04-29 00:46:40,284 INFO spawned: 'apache' with pid 7
+2025-04-29 00:46:41,324 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:46:51,922 INFO Set uid to user 0 succeeded
+2025-04-29 00:46:51,923 INFO supervisord started with pid 1
+2025-04-29 00:46:52,926 INFO spawned: 'apache' with pid 7
+2025-04-29 00:46:53,967 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:51:53,225 INFO Set uid to user 0 succeeded
+2025-04-29 00:51:53,226 INFO supervisord started with pid 1
+2025-04-29 00:51:54,228 INFO spawned: 'apache' with pid 15
+2025-04-29 00:51:55,269 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 00:54:32,459 INFO Set uid to user 0 succeeded
+2025-04-29 00:54:32,461 INFO supervisord started with pid 1
+2025-04-29 00:54:33,463 INFO spawned: 'apache' with pid 7
+2025-04-29 00:54:34,503 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 10:20:26,332 INFO Set uid to user 0 succeeded
+2025-04-29 10:20:26,339 INFO supervisord started with pid 1
+2025-04-29 10:20:27,348 INFO spawned: 'apache' with pid 7
+2025-04-29 10:20:28,514 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 10:29:50,599 INFO Set uid to user 0 succeeded
+2025-04-29 10:29:50,602 INFO supervisord started with pid 1
+2025-04-29 10:29:51,607 INFO spawned: 'apache' with pid 7
+2025-04-29 10:29:52,730 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 10:36:49,863 INFO Set uid to user 0 succeeded
+2025-04-29 10:36:49,875 INFO supervisord started with pid 1
+2025-04-29 10:36:50,878 INFO spawned: 'apache' with pid 7
+2025-04-29 10:36:52,320 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 10:57:15,144 INFO Set uid to user 0 succeeded
+2025-04-29 10:57:15,151 INFO supervisord started with pid 1
+2025-04-29 10:57:16,160 INFO spawned: 'apache' with pid 7
+2025-04-29 10:57:17,363 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-29 21:53:06,353 INFO Set uid to user 0 succeeded
+2025-04-29 21:53:06,355 INFO supervisord started with pid 1
+2025-04-29 21:53:07,357 INFO spawned: 'apache' with pid 7
+2025-04-29 21:53:08,431 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-01 18:08:41,753 INFO Set uid to user 0 succeeded
+2025-05-01 18:08:41,756 INFO supervisord started with pid 1
+2025-05-01 18:08:42,758 INFO spawned: 'apache' with pid 7
+2025-05-01 18:08:43,859 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-03 13:30:43,539 INFO Set uid to user 0 succeeded
+2025-05-03 13:30:43,542 INFO supervisord started with pid 1
+2025-05-03 13:30:44,548 INFO spawned: 'apache' with pid 7
+2025-05-03 13:30:45,703 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-04 13:23:43,339 INFO Set uid to user 0 succeeded
+2025-05-04 13:23:43,346 INFO supervisord started with pid 1
+2025-05-04 13:23:44,353 INFO spawned: 'apache' with pid 7
+2025-05-04 13:23:45,560 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-04 21:22:25,345 INFO Set uid to user 0 succeeded
+2025-05-04 21:22:25,353 INFO supervisord started with pid 1
+2025-05-04 21:22:26,356 INFO spawned: 'apache' with pid 6
+2025-05-04 21:22:27,506 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 00:53:50,916 INFO Set uid to user 0 succeeded
+2025-05-05 00:53:50,924 INFO supervisord started with pid 1
+2025-05-05 00:53:51,926 INFO spawned: 'apache' with pid 7
+2025-05-05 00:53:53,055 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:08:59,544 INFO Set uid to user 0 succeeded
+2025-05-05 03:08:59,547 INFO supervisord started with pid 1
+2025-05-05 03:09:00,551 INFO spawned: 'apache' with pid 7
+2025-05-05 03:09:01,710 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:10:00,009 INFO Set uid to user 0 succeeded
+2025-05-05 03:10:00,012 INFO supervisord started with pid 1
+2025-05-05 03:10:01,015 INFO spawned: 'apache' with pid 15
+2025-05-05 03:10:02,128 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:43:39,245 INFO Set uid to user 0 succeeded
+2025-05-05 03:43:39,248 INFO supervisord started with pid 1
+2025-05-05 03:43:40,253 INFO spawned: 'apache' with pid 8
+2025-05-05 03:43:40,256 INFO spawned: 'consumer_1' with pid 9
+2025-05-05 03:43:41,365 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:43:41,365 INFO success: consumer_1 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:43:45,956 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:43:46,960 INFO spawned: 'consumer_1' with pid 17
+2025-05-05 03:43:47,963 INFO success: consumer_1 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:43:49,282 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:43:50,288 INFO spawned: 'consumer_1' with pid 18
+2025-05-05 03:43:51,290 INFO success: consumer_1 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:44:13,425 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:44:14,431 INFO spawned: 'consumer_1' with pid 19
+2025-05-05 03:44:14,519 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:44:15,522 INFO spawned: 'consumer_1' with pid 20
+2025-05-05 03:44:15,636 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:44:17,640 INFO spawned: 'consumer_1' with pid 21
+2025-05-05 03:44:17,748 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:44:20,754 INFO spawned: 'consumer_1' with pid 22
+2025-05-05 03:44:20,896 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:44:21,898 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 03:45:34,796 INFO Set uid to user 0 succeeded
+2025-05-05 03:45:34,799 INFO supervisord started with pid 1
+2025-05-05 03:45:35,803 INFO spawned: 'apache' with pid 15
+2025-05-05 03:45:35,806 INFO spawned: 'consumer_1' with pid 16
+2025-05-05 03:45:35,976 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:45:36,976 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:45:36,980 INFO spawned: 'consumer_1' with pid 30
+2025-05-05 03:45:37,088 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:45:39,093 INFO spawned: 'consumer_1' with pid 33
+2025-05-05 03:45:39,203 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:45:42,212 INFO spawned: 'consumer_1' with pid 34
+2025-05-05 03:45:42,314 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:45:43,316 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 03:49:07,864 INFO Set uid to user 0 succeeded
+2025-05-05 03:49:07,866 INFO supervisord started with pid 1
+2025-05-05 03:49:08,871 INFO spawned: 'apache' with pid 23
+2025-05-05 03:49:08,874 INFO spawned: 'consumer_1' with pid 24
+2025-05-05 03:49:09,053 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:49:10,054 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 03:49:10,057 INFO spawned: 'consumer_1' with pid 32
+2025-05-05 03:49:10,245 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:49:12,251 INFO spawned: 'consumer_1' with pid 33
+2025-05-05 03:49:12,349 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:49:15,355 INFO spawned: 'consumer_1' with pid 34
+2025-05-05 03:49:15,480 WARN exited: consumer_1 (exit status 255; not expected)
+2025-05-05 03:49:16,481 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 11:05:21,448 INFO Set uid to user 0 succeeded
+2025-05-05 11:05:21,457 INFO supervisord started with pid 1
+2025-05-05 11:05:22,462 INFO spawned: 'apache' with pid 7
+2025-05-05 11:05:22,465 INFO spawned: 'consumer_1' with pid 8
+2025-05-05 11:05:22,565 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:05:23,591 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 11:05:23,592 INFO spawned: 'consumer_1' with pid 16
+2025-05-05 11:05:23,609 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:05:25,614 INFO spawned: 'consumer_1' with pid 17
+2025-05-05 11:05:25,643 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:05:28,650 INFO spawned: 'consumer_1' with pid 18
+2025-05-05 11:05:28,678 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:05:29,680 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 11:12:12,728 INFO Set uid to user 0 succeeded
+2025-05-05 11:12:12,730 INFO supervisord started with pid 1
+2025-05-05 11:12:13,734 INFO spawned: 'apache' with pid 23
+2025-05-05 11:12:13,738 INFO spawned: 'consumer_1' with pid 24
+2025-05-05 11:12:13,788 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:12:14,833 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 11:12:14,837 INFO spawned: 'consumer_1' with pid 32
+2025-05-05 11:12:14,863 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:12:16,868 INFO spawned: 'consumer_1' with pid 33
+2025-05-05 11:12:16,901 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:12:19,908 INFO spawned: 'consumer_1' with pid 34
+2025-05-05 11:12:19,935 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:12:20,937 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 11:13:16,874 INFO Set uid to user 0 succeeded
+2025-05-05 11:13:16,876 INFO supervisord started with pid 1
+2025-05-05 11:13:17,879 INFO spawned: 'apache' with pid 31
+2025-05-05 11:13:17,882 INFO spawned: 'consumer_1' with pid 32
+2025-05-05 11:13:17,911 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:13:17,941 WARN exited: apache (exit status 0; not expected)
+2025-05-05 11:13:18,946 INFO spawned: 'apache' with pid 35
+2025-05-05 11:13:18,951 INFO spawned: 'consumer_1' with pid 36
+2025-05-05 11:13:19,008 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:13:19,014 WARN exited: apache (exit status 0; not expected)
+2025-05-05 11:13:21,019 INFO spawned: 'apache' with pid 39
+2025-05-05 11:13:21,022 INFO spawned: 'consumer_1' with pid 40
+2025-05-05 11:13:21,056 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:13:21,077 WARN exited: apache (exit status 0; not expected)
+2025-05-05 11:13:24,084 INFO spawned: 'apache' with pid 43
+2025-05-05 11:13:24,086 INFO spawned: 'consumer_1' with pid 44
+2025-05-05 11:13:24,121 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:13:24,128 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly
+2025-05-05 11:13:24,142 WARN exited: apache (exit status 0; not expected)
+2025-05-05 11:13:25,144 INFO gave up: apache entered FATAL state, too many start retries too quickly
+2025-05-05 11:16:24,994 INFO Set uid to user 0 succeeded
+2025-05-05 11:16:24,996 INFO supervisord started with pid 1
+2025-05-05 11:16:26,000 INFO spawned: 'apache' with pid 39
+2025-05-05 11:16:26,003 INFO spawned: 'consumer_1' with pid 40
+2025-05-05 11:16:26,034 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:16:27,080 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-05-05 11:16:27,083 INFO spawned: 'consumer_1' with pid 48
+2025-05-05 11:16:27,111 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:16:29,116 INFO spawned: 'consumer_1' with pid 49
+2025-05-05 11:16:29,140 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:16:32,146 INFO spawned: 'consumer_1' with pid 50
+2025-05-05 11:16:32,174 WARN exited: consumer_1 (exit status 1; not expected)
+2025-05-05 11:16:33,175 INFO gave up: consumer_1 entered FATAL state, too many start retries too quickly

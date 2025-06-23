@@ -31,7 +31,7 @@ class RedisService
 
     public function setToken(string $token, int $time, User $user): void
     {
-        $this->redis->setex("token:$token", $time, $user->id);
+        $this->redis->setex("token:$token", $time, $user->getId());
     }
 
     public function porcessAndDelteTokenByUserId(string $oldTokenKey, int $userId): void

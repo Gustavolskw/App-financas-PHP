@@ -29,8 +29,7 @@ class Routes
         $token = $matches[1];
         try {
             $decoded = $this->utilJwt->decodeJwt($token);
-            $request->user_id = $decoded->sub;
-            return true;
+            return $decoded->iss == 'auth_service';
         } catch (\Exception $e) {
             error_log($e->getMessage());
             return false;
