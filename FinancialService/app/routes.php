@@ -19,10 +19,10 @@ return function (App $app) {
         return $response;
     });
 
-    $app->group("/accounts", function (RouteCollectorProxy $group) {
-        $group->get("", AccountController::class . ":getAllAccounts");
-        //$group->get("/{id}", ViewAccountAction::class);
-        $group->post("", AccountController::class . ":createAccount");
-        $group->patch("/{id}", AccountController::class . ":updateAccountData");
-    });
+//    $app->group("/accounts", function (RouteCollectorProxy $group) {
+//        $group->get("", AccountController::class . ":getAllAccounts");
+//        //$group->get("/{id}", ViewAccountAction::class);
+//        $group->post("", AccountController::class . ":createAccount");
+//        $group->patch("/{id}", AccountController::class . ":updateAccountData");
+//    });
 };

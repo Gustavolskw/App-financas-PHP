@@ -1,5 +1,5 @@
 # Dockerfile
-FROM php:8.4.3-apache
+FROM php:8.3-apache
 
 
 
@@ -67,4 +67,3 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Define o entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
