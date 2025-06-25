@@ -7,21 +7,22 @@ RUN apt-get update && \
     apt-get install -y \
         libzip-dev \
         libicu-dev \
+        libssl-dev \
         zip \
         unzip \
         git \
         curl \
         libpq-dev \
-        supervisor \
-        && docker-php-ext-install \
-            zip \
-            sockets \
-            pdo \
-            pdo_mysql \
-            bcmath \
-            intl && \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
+        supervisor && \
+    docker-php-ext-install \
+        zip \
+        sockets \
+        pdo \
+        pdo_mysql \
+        bcmath \
+        intl && \
+    pecl install xdebug openswoole && \
+    docker-php-ext-enable xdebug openswoole && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
