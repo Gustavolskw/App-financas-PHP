@@ -1,12 +1,15 @@
-<?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true">
-  <coverage/>
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+         verbose="true">
   <testsuites>
-    <testsuite name="unit">
-      <directory>tests</directory>
+    <testsuite name="Tests Suite">
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
-  <logging>
-    <testdoxText outputFile="testes-executados.txt"/>
-  </logging>
+
+  <filter>
+    <whitelist>
+      <directory suffix=".php">./src</directory>
+    </whitelist>
+  </filter>
 </phpunit>

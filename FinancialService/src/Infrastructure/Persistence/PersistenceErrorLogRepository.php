@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Persistence;
 
-class MonthControlRepository
+class PersistenceErrorLogRepository
 {
 
 }

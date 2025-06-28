@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
-use App\Domain\Interfaces\WalletRepository;
+use App\Domain\Interfaces\DAO\WalletDAOInterface;
+use App\Domain\Interfaces\Repository\WalletRepositoryInterface;
+use App\Infrastructure\DAO\WalletDAO;
 use App\Infrastructure\Persistence\Wallet\PdoWalletRepository;
+use App\Infrastructure\Persistence\WalletRepository;
 use DI\ContainerBuilder;
+use MongoDB\Client;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
@@ -57,6 +61,25 @@ return function (ContainerBuilder $containerBuilder) {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ],
         ],
-        WalletRepository::class => DI\autowire(PdoWalletRepository::class),
+
+        'mongo' => [
+            'uri' => getenv('MONGO_URI') ?: 'mongodb://root:password@mongodb-fin:27017',
+            'database' => getenv('MONGO_DB') ?: 'financial-app',
+        ],
+
+
+        Client::class => function (ContainerInterface $c) {
+            $mongoConfig = $c->get('mongo');
+            return new Client($mongoConfig['uri']);
+        },
+
+        MongoDB\Database::class => function (ContainerInterface $c) {
+            $mongoConfig = $c->get('mongo');
+            $client = $c->get(Client::class);
+            return $client->selectDatabase($mongoConfig['database']);
+        },
+
+        WalletRepositoryInterface::class => DI\autowire(WalletRepository::class),
+        WalletDAOInterface::class => DI\autowire(WalletDAO::class),
     ]);
 };
