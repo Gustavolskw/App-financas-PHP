@@ -21,8 +21,8 @@ RUN apt-get update && \
         pdo_mysql \
         bcmath \
         intl && \
-    pecl install xdebug openswoole && \
-    docker-php-ext-enable xdebug openswoole && \
+   pecl install xdebug openswoole mongodb && \
+       docker-php-ext-enable xdebug openswoole mongodb && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

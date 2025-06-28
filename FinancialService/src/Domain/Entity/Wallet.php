@@ -57,7 +57,7 @@ class Wallet implements JsonSerializable
         return $this->description;
     }
 
-    public function isStatus(): bool
+    public function getStatus(): bool
     {
         return $this->status;
     }

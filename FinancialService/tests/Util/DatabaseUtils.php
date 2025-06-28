@@ -1,7 +1,6 @@
 <?php
 
-namespace UltraLIMS\Tests\Util;
-
+namespace Tests\Util;
 trait DatabaseUtils
 {
     protected function removeRelationshipIndex($tables, $pdo)
@@ -27,20 +26,10 @@ trait DatabaseUtils
             $pdo->exec($dropSql);
         }
     }
-
-    protected function recreateEstablishmentTable()
-    {
-        $this->pdo->exec("DROP TABLE estabelecimento");
-        $this->pdo->exec("
-        CREATE TABLE estabelecimento (
-            ai_Estabelecimento INTEGER PRIMARY KEY AUTOINCREMENT,
-            idEmpresa INTEGER NOT NULL,
-            idEstabelecimento VARCHAR(5) NOT NULL,
-            descricao VARCHAR(100),
-            idPessoa INTEGER,
-            ai_MenuPerfilColetor INTEGER,
-            ai_MatrizTempoContato INTEGER,
-            ai_EstabelecimentoAnalises INTEGER
-        )");
+    public function deleteAllRecords($tables, $pdo){
+        foreach ($tables as $table) {
+            $stmt = $pdo->prepare("DELETE FROM $table");
+            $stmt->execute();
+        }
     }
 }
