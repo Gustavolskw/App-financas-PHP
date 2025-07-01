@@ -6,6 +6,7 @@ use App\Application\Exception\ApplicationException;
 use App\Application\Exception\InvalidParametersDataException;
 use App\Application\UseCases\Wallet\CreateWalletCase;
 use App\Domain\Interfaces\Repository\WalletRepositoryInterface;
+use App\Infrastructure\DAO\WalletDAO;
 use App\Infrastructure\Persistence\WalletRepository;
 use Monolog\Logger;
 use PDO;
@@ -21,13 +22,26 @@ class CreateWalletCaseTest extends TestCase
     private CreateWalletCase $createWalletCase;
     private WalletRepository $walletRepository;
     private MockObject $walletRepositoryMock;
-    public function setUp():void
+    private WalletDAO $walletDAO;
+
+    public function setUp(): void
     {
+        // Check if SQLite is available
+        if (!in_array('sqlite', PDO::getAvailableDrivers())) {
+            $this->markTestSkipped('SQLite PDO driver not available');
+        }
+
         $loggerMock = $this->createMock(Logger::class);
         $loggerMock->method('info')->willReturn(true);
+
         $sqlitePath = getenv('SQLITE_PATH');
+        if (!$sqlitePath) {
+            $this->markTestSkipped('SQLITE_PATH environment variable not set');
+        }
+
         $this->pdo = new PDO("sqlite:$sqlitePath");
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
         $tables = [
             'wallets',
         ];
@@ -46,15 +60,19 @@ class CreateWalletCaseTest extends TestCase
         }
         $this->walletRepository = new WalletRepository($loggerMock, $this->pdo);
         $this->walletRepositoryMock = $this->createMock(WalletRepositoryInterface::class);
+        $this->walletDAO = new WalletDAO($loggerMock, $this->pdo);
 
     }
+
     public function tearDown(): void
     {
-        $tables = [
-            'wallets',
-        ];
-        $this->deleteAllRecords($tables, $this->pdo);
-        $this->pdo->exec("DELETE FROM sqlite_sequence");
+        if (isset($this->pdo)) {
+            $tables = [
+                'wallets',
+            ];
+            $this->deleteAllRecords($tables, $this->pdo);
+            $this->pdo->exec("DELETE FROM sqlite_sequence");
+        }
     }
 
 
@@ -62,14 +80,14 @@ class CreateWalletCaseTest extends TestCase
     {
         $userId = 2;
         $userEmail = 'teste@email.com';
-        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->once())->method('save');
         $createWalletCase->execute($userId, $userEmail);
     }
     public function testShouldNotCreateWalletWithInvalidData()
     {
         $userEmail = 'teste@email.com';
-        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->never())->method('save');
         $this->expectException(InvalidParametersDataException::class);
         $createWalletCase->execute(null, $userEmail);
@@ -78,7 +96,7 @@ class CreateWalletCaseTest extends TestCase
     public function testShouldNotCreateWalletWithInvalidEmail()
     {
         $userId = 2;
-        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->never())->method('save');
         $this->expectException(InvalidParametersDataException::class);
         $createWalletCase->execute($userId, null);
@@ -88,7 +106,7 @@ class CreateWalletCaseTest extends TestCase
     {
         $userId = 1;
         $userEmail = 'teste1@email.com';
-        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->never())->method('save');
         $createWalletCase->execute($userId, $userEmail);
     }
@@ -96,7 +114,7 @@ class CreateWalletCaseTest extends TestCase
     {
         $userId = 2;
         $userEmail = 'teste2@email.com';
-        $createWalletCase = new CreateWalletCase($this->walletRepository);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->once())->method('save')->willReturn(true);
         $createWalletCase->execute($userId, $userEmail);
 
@@ -116,12 +134,12 @@ class CreateWalletCaseTest extends TestCase
     {
         $userId = 1;
         $userEmail = 'teste1@email.com';
-        $createWalletCase = new CreateWalletCase($this->walletRepository);
+        $createWalletCase = new CreateWalletCase($this->walletRepositoryMock, $this->walletDAO);
         $this->walletRepositoryMock->expects($this->once())->method('save')->willReturn(true);
-        try{
+        try {
 
             $createWalletCase->execute($userId, $userEmail);
-        }catch(ApplicationException $e){
+        } catch (ApplicationException $e) {
             $sql = "SELECT * FROM wallets WHERE user_id = :userId AND user_email = :userEmail";
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);

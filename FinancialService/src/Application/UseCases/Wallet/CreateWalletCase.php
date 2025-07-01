@@ -32,13 +32,9 @@ class CreateWalletCase
         }
     }
 
-    public function validateUserEmailUsage(string $userEmail): void
+    public function validateWalletByUserAndEmail(string $userEmail): void
     {
 
     }
 
-    public function validateUserIdUsage(int $userId): void
-    {
-
-    }
 }
