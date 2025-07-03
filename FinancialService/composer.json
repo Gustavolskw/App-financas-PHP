@@ -32,8 +32,8 @@
         "guzzlehttp/guzzle": "^7.4",
         "illuminate/validation": "^10.0",
         "moneyphp/money": "^4.7",
+        "mongodb/mongodb": "^2.1",
         "monolog/monolog": "^2.8",
-        "openswoole/core": "^22",
         "php-amqplib/php-amqplib": "^3.5",
         "php-di/php-di": "^7.0",
         "slim/psr7": "^1.5",
@@ -58,7 +58,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Acc\\": "migrations/"
         }
     },
     "autoload-dev": {

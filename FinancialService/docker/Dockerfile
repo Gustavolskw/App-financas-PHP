@@ -8,6 +8,7 @@ RUN apt-get update && \
         libzip-dev \
         libicu-dev \
         libssl-dev \
+        libbrotli-dev \
         zip \
         unzip \
         git \
@@ -21,8 +22,8 @@ RUN apt-get update && \
         pdo_mysql \
         bcmath \
         intl && \
-    pecl install xdebug openswoole && \
-    docker-php-ext-enable xdebug openswoole && \
+   pecl install xdebug swoole mongodb && \
+   docker-php-ext-enable xdebug swoole mongodb && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
