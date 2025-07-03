@@ -6,24 +6,24 @@ use JsonSerializable;
 
 class Wallet implements JsonSerializable
 {
-    private int $id;
+    private ?int $id;
     private int $userId;
     private string $userEmail;
     private string $name;
     private ?string $description;
     private bool $status;
-    private \DateTimeImmutable $createdAt;
+    private \DateTimeInterface $createdAt;
 
     public function __construct(
-        int $id,
+        ?int $id,
         int $userId,
         string $userEmail,
         string $name,
         ?string $description,
         bool $status,
-        \DateTimeImmutable $createdAt
+        \DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
+        $this->id = $id ?? null;
         $this->userId = $userId;
         $this->userEmail = $userEmail;
         $this->name = $name;
@@ -62,7 +62,7 @@ class Wallet implements JsonSerializable
         return $this->status;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }

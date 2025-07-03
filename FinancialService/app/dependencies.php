@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 use App\Domain\Interfaces\DAO\WalletDAOInterface;
+use App\Domain\Interfaces\Repository\PersistenceErrorLogRepositoryInterface;
 use App\Domain\Interfaces\Repository\WalletRepositoryInterface;
 use App\Infrastructure\DAO\WalletDAO;
 use App\Infrastructure\Persistence\Wallet\PdoWalletRepository;
@@ -81,5 +82,6 @@ return function (ContainerBuilder $containerBuilder) {
 
         WalletRepositoryInterface::class => DI\autowire(WalletRepository::class),
         WalletDAOInterface::class => DI\autowire(WalletDAO::class),
+        PersistenceErrorLogRepositoryInterface::class => DI\autowire(PersistenceErrorLogRepositoryInterface::class),
     ]);
 };
